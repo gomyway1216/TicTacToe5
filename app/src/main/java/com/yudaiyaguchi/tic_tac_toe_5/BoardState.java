@@ -23,6 +23,12 @@ public class BoardState {
 //    public char turn;
     private boolean isFirstMove = false;
 
+    private int maxRow;  // I define them to narrow down search space
+    private int minRow;
+    private int maxCol;  // usually starting from center and it exclude
+    private int minCol;
+    // more than 2 outside of most outside stone
+
     public BoardState(int boardSize, int wChain, int maxDepth) {
 //        turn = 'X';
         this.boardSize = boardSize;
@@ -33,6 +39,10 @@ public class BoardState {
         ai = new AI();
         ai.setMaxDepth(maxDepth);
         inizializeBoard();
+        maxRow = boardSize/2;
+        minRow = boardSize/2;
+        maxCol = boardSize/2;
+        minCol = boardSize/2;
     }
 
     /**
@@ -195,9 +205,26 @@ public class BoardState {
         return chains;
     }
 
-    public void move(int row, int col) {
+    public boolean move(int row, int col) {
         board[row][col] = currentPlayer;
+        maxRow = Math.max(maxRow, row);
+        minRow = Math.min(minRow, row);
+        maxCol = Math.max(maxCol, col);
+        minCol = Math.min(minCol, col);
+        if(isEnded(row, col, 1, 0)) return true;
+        if(isEnded(row, col, 0, 1)) return true;
+        if(isEnded(row, col, 1, 1)) return true;
+        if(isEnded(row, col, 1, -1)) return true;
         changeTurn();
+        return false;
+//        if (count( board[row][col], row, col, 1, 0 ) >= 5)
+//            return true;
+//        if (count( board[row][col], row, col, 0, 1 ) >= 5)
+//            return true;
+//        if (count( board[row][col], row, col, 1, -1 ) >= 5)
+//            return true;
+//        if (count( board[row][col], row, col, 1, 1 ) >= 5)
+//            return true;
     }
 
 //    public void move(int row, int col) {
@@ -219,14 +246,94 @@ public class BoardState {
         afterMove.setCurrentPlayer(currentPlayer);
         afterMove.setUserTurn(this.userTurn);
         afterMove.setAiTurn(this.aiTurn);
+        afterMove.maxRow = maxRow;
+        afterMove.minRow = minRow;
+        afterMove.maxCol = maxCol;
+        afterMove.minCol = minCol;
         afterMove.move(row, col);
         return afterMove;
     }
 
+    public boolean isEnded(int row, int col, int dr, int dc) {
+        int count  = 1; // center stone should be also counted
+        int r = row + dr;
+        int c = col + dc;
+        while(r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] == currentPlayer) {
+            count++;
+            r += dr;
+            c += dc;
+        }
+
+        if(count >= 5)  return true;
+
+        r = row - dr;
+        c = col - dc;
+        while(r >= 0 && r < boardSize && c >= 0 && c < boardSize && board[r][c] == currentPlayer) {
+            count++;
+            r -= dr;
+            c -= dc;
+        }
+
+        if(count >= 5)  return true;
+        return false;
+    }
+
     public boolean isEnded() {
-        HashMap<String, Integer> chains = findChain();
-        if(chains.containsValue(wChain))
-            return true;
+        for(int i = 0; i < boardSize; i++) {
+            for(int j = 0; j < boardSize; j++) {
+                if(board[i][j] != ' ') {
+                    char check = board[i][j];
+                    int startCol = j + 1;
+                    int counterRow = 1;
+                    // check row from left to right
+                    while (startCol < boardSize && check == board[i][startCol]) {
+                        counterRow++;
+                        startCol++;
+                    }
+
+                    if(counterRow >= wChain)
+                        return true;
+
+                    int startRow = i + 1;
+                    int counterCol = 1;
+                    // check col from top to down
+                    while (startRow < boardSize && check == board[startRow][j]) {
+                        counterCol++;
+                        startRow++;
+                    }
+
+                    if(counterCol >= wChain)
+                        return true;
+
+                    int startDiagCol = j + 1;
+                    int startDiagRow = i + 1;
+                    int counterDiag = 1;
+                    // check diagonal from top left to bottom right
+                    while (startDiagCol < boardSize && startDiagRow < boardSize && check == board[startDiagRow][startDiagCol]) {
+                        counterDiag++;
+                        startDiagCol++;
+                        startDiagRow++;
+                    }
+
+                    if(counterDiag >= wChain)
+                        return true;
+
+                    int startDiag2Row = i + 1;
+                    int startDiag2Col = j - 1;
+                    int counterDiag2 = 1;
+                    // check diagonal from top right to bottom left
+                    while (startDiag2Row < boardSize && startDiag2Col >= 0 && check == board[startDiag2Row][startDiag2Col]) {
+                        counterDiag2++;
+                        startDiag2Row++;
+                        startDiag2Col--;
+                    }
+
+                    if(counterDiag2 >= wChain)
+                        return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -236,16 +343,33 @@ public class BoardState {
         return false;
     }
 
-    public void aiMove() {
+    public boolean aiMove() {
         ai.move(this);
         String stringMove = ai.getMove();
         StringTokenizer tokens = new StringTokenizer(stringMove, ",");
         String row = tokens.nextToken();
         String col = tokens.nextToken();
-        move(Integer.parseInt(row), Integer.parseInt(col));
+        return move(Integer.parseInt(row), Integer.parseInt(col));
     }
 
 //    public BoardState applyMove(int player, int move) {
 //
 //    }
+
+
+    public int getMaxRow() {
+        return maxRow;
+    }
+
+    public int getMinRow() {
+        return minRow;
+    }
+
+    public int getMaxCol() {
+        return maxCol;
+    }
+
+    public int getMinCol() {
+        return minCol;
+    }
 }

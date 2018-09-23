@@ -34,13 +34,13 @@ public class GameActivity extends AppCompatActivity {
 
 
         // user chose to go first
-        char userTurn = intent.getCharExtra("turn", 'O');
+        char userTurn = intent.getCharExtra("turn", 'X');
         int depth = intent.getIntExtra("depth", 3);
         Log.d("turn: "," passed turn: " + userTurn);
         Log.d("depth: "," passed depth: " + depth);
 
         // I will hard code the board size winning chanin and modify it later.
-        boardState = new BoardState(5, 4, depth);
+        boardState = new BoardState(7, 5, depth);
 
 
         gameEngine = new GameEngine();

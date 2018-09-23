@@ -15,6 +15,9 @@ public class AI {
 //    private char AITurn;
     private String move;
     String TAG = "test";
+    private int maxRow;  // I define them to narrow down search space
+    private int maxCol;  // usually starting from center and it exclude
+    // more than 2 outside of most outside stone
 
     public void setMaxDepth(int maxDepth) {
         this.maxDepth = maxDepth;
@@ -55,9 +58,16 @@ public class AI {
 //                Log.d(TAG, "state b : k : " + k + " l : " + l + " " + state.getBoard()[k][l]) ;
         BoardState bs;
 
+
+
         int eval = 0;
-        for (int i = 0; i < state.board.length; i++) {
-            for(int j = 0; j < state.board.length; j++) {
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 1 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
+
+        for (int i = rMin; i <= rMax; i++) {
+            for(int j = cMin; j < cMax; j++) {
                 if (state.isLegalMove(i, j)) {
 //                    Log.d(TAG, " each======== i : " + i + " j : " + j + " " + eval) ;
                     eval = evaluate(state.applyMove(state.getAiTurn(), i, j));
@@ -133,11 +143,15 @@ public class AI {
 
 //        int count =0;
 
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 1 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
 
         boolean isBreak = false;
-        for (int i = 0; i < state.board.length; i++) {
+        for (int i = rMin; i <= rMax; i++) {
             if(isBreak) break;
-            for (int j = 0; j < state.board.length; j++) {
+            for (int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
                     v = Math.max(v, minValue(state.applyMove('X', i, j), maxDepth,
                             maxDepth - 1, alpha, beta));
@@ -172,9 +186,15 @@ public class AI {
         if (currentDepth == 0)
             return evaluate(state);
 
+
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 1 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
+
         int v = Integer.MIN_VALUE;
-        for (int i = 0; i < state.board.length; i++) {
-            for(int j = 0; j < state.board.length; j++) {
+        for (int i = rMin; i <= rMax; i++) {
+            for(int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
                     v = Math.max(v, minValue(state.applyMove('X', i, j), maxDepth,
                             currentDepth - 1, alpha, beta));
@@ -203,9 +223,14 @@ public class AI {
         if (currentDepth == 0)
             return evaluate(state);
 
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 1 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
+
         int v = Integer.MAX_VALUE;
-        for (int i = 0; i < state.board.length; i++) {
-            for(int j = 0; j < state.board.length; j++) {
+        for (int i = rMin; i <= rMax; i++) {
+            for(int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
                     v = Math.min(v, maxValue(state.applyMove('O', i, j), maxDepth,
                             currentDepth - 1, alpha, beta));
@@ -246,6 +271,12 @@ public class AI {
 //            Log.d(TAG, " each======== " + key + "        " + chains.get(key)) ;
 //        }
 
+        for(int i = state.getMinRow(); i <= state.getMaxRow(); i++) {
+            for(int j = state.getMinCol(); j <= state.getMaxCol(); j++) {
+
+            }
+        }
+
 //        Iterator itF = chains.entrySet().iterator();
         for (String key: chains.keySet()){
 //            Map.Entry pair = (Map.Entry)itF.next();
@@ -259,24 +290,24 @@ public class AI {
                 if (val == 1)
                     score += 1;
                 else if (val == 2)
-                    score += 10;
+                    score += 5;
                 else if (val == 3)
                     score += 200;
                 else if (val == 4)
-                    score += 1000;
+                    score += 5000;
                 else if (val == 5)
-                    score += 100000;
+                    score += 1000000;
             } else {
                 if (val == 1)
                     score -= 1;
                 if (val == 2)
-                    score -= 10;
+                    score -= 5;
                 else if (val == 3)
-                    score -= 200;
+                    score -= 500;
                 else if (val == 4)
-                    score -= 1000;
+                    score -= 30000;
                 else if (val == 5)
-                    score -= 100000;
+                    score -= 1000000;
             }
         }
 //        Log.d(TAG, "SCOREEEEEEEEEEE " + score) ;

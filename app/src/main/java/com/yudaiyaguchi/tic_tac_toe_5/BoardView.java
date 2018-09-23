@@ -36,7 +36,7 @@ public class BoardView extends View {
         super(context, attrs);
         gridPaint = new Paint();
 
-        boardSize = 5;
+        boardSize = 7;
 
         // smooths out the edges of what is being drawn
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -186,7 +186,7 @@ public class BoardView extends View {
             // this part would be exchanged with change turn method
             // this "win", I am not sure
 //            char win = gameEngine.play(x, y);
-
+//            invalidate();
 
             // I am not sure whether it is going to work or not.
 //            if(boardState.isLegalMove(x, y)) {
@@ -196,15 +196,16 @@ public class BoardView extends View {
                 if(boardState.isLegalMove(y, x)) {
                     // I am not very sure about these order
                     // call board.move method
-                    boardState.move(y, x);
-                    boolean userWin = boardState.isEnded();
+//                    invalidate();
+                    boolean userWin = boardState.move(y, x);
+//                    boolean userWin = boardState.isEnded();
                     invalidate();
                     // if user win
                     if(userWin)
                         activity.gameEnded(boardState.getUserTurn());
                     else {
-                        boardState.aiMove();
-                        boolean aiWin = boardState.isEnded();
+                        boolean aiWin = boardState.aiMove();
+//                        boolean aiWin = boardState.isEnded();
                         invalidate();
 
                         if(aiWin)
