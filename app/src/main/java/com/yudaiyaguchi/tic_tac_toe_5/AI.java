@@ -291,18 +291,22 @@ public class AI {
         if(diagonalLTR.contains(row4Win))   eval+= 10000000;
         if(diagonalRTL.contains(row4Win))   eval+= 10000000;
 
-        String normal4 = " " + current+""+current+""+current+""+current;
-
+        String normal4A = " " + current+""+current+""+current+""+current;
+        String normal4B = current+""+current+""+current+""+current + " ";
 //        if(horizontal.contains(row4Win) && vertical.contains(row4Win) ||
 //                horizontal.contains(row4Win) && diagonalLTR.contains(row4Win)
 //                || horizontal.contains(row4Win) && diagonalRTL.contains(row4Win)
 //                || vertical.contains(row4Win) && diagonalLTR.contains(row4Win)
 //                || vertical.contains(row4Win) && diagonalRTL.contains(row4Win)
 //                || vertical.contains(row4Win) && )
-        if(horizontal.contains(normal4))    eval+= 100000;
-        if(vertical.contains(normal4))  eval+= 100000;
-        if(diagonalLTR.contains(normal4))   eval+= 100000;
-        if(diagonalRTL.contains(normal4))   eval+= 100000;
+        if(horizontal.contains(normal4A))    eval+= 100000;
+        if(vertical.contains(normal4A))      eval+= 100000;
+        if(diagonalLTR.contains(normal4A))   eval+= 100000;
+        if(diagonalRTL.contains(normal4A))   eval+= 100000;
+        if(horizontal.contains(normal4B))    eval+= 100000;
+        if(vertical.contains(normal4B))      eval+= 100000;
+        if(diagonalLTR.contains(normal4B))   eval+= 100000;
+        if(diagonalRTL.contains(normal4B))   eval+= 100000;
 
         String row3 = " " + current+""+current+""+current+ " ";
         if(horizontal.contains(row3))   eval+= 50000;
@@ -321,7 +325,24 @@ public class AI {
         if(diagonalLTR.contains(broken3T1))  eval+= 30000;
         if(diagonalRTL.contains(broken3T2))  eval+= 30000;
 
-        if(horizontal.charAt(horizontal.length()/2-1) == current)   eval+= 1000;
+        // open 2 EXXE #E indicates empty
+        String row2 = " " + turn + turn + " ";
+
+        if(horizontal.contains(row2))   eval+= 3000;
+        if(vertical.contains(row2))     eval+= 3000;
+        if(diagonalLTR.contains(row2))  eval+= 3000;
+        if(diagonalRTL.contains(row2))  eval+= 3000;
+
+        String normal3A = " " + turn + turn + turn;
+        String normal3B = turn + turn + turn + " ";
+        if(horizontal.contains(normal3A))   eval+= 1000;
+        if(vertical.contains(normal3A))     eval+= 1000;
+        if(diagonalLTR.contains(normal3A))  eval+= 1000;
+        if(diagonalRTL.contains(normal3A))  eval+= 1000;
+        if(horizontal.contains(normal3B))   eval+= 1000;
+        if(vertical.contains(normal3B))     eval+= 1000;
+        if(diagonalLTR.contains(normal3B))  eval+= 1000;
+        if(diagonalRTL.contains(normal3B))  eval+= 1000;
 
         return eval+5;
     }
