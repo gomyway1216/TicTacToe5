@@ -14,7 +14,7 @@ import com.yudaiyaguchi.tic_tac_toe_5.R;
 public class GameActivity extends AppCompatActivity {
 
     private BoardView boardView;
-    private GameEngine gameEngine;
+//    private GameEngine gameEngine;
     private BoardState boardState;
 
 
@@ -40,11 +40,11 @@ public class GameActivity extends AppCompatActivity {
         Log.d("depth: "," passed depth: " + depth);
 
         // I will hard code the board size winning chanin and modify it later.
-        boardState = new BoardState(9, 5, 1);
+        boardState = new BoardState(13, 5, 1);
 
 
-        gameEngine = new GameEngine();
-        boardView.setGameEngine(gameEngine);
+//        gameEngine = new GameEngine();
+//        boardView.setGameEngine(gameEngine);
 
         //
         boardView.setBoardState(boardState);

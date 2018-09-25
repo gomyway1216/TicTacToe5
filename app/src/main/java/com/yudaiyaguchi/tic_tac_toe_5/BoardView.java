@@ -19,7 +19,7 @@ public class BoardView extends View {
     private int width, height, eltW, eltH;
     // oPaint is just the paint of '0' and xPaint is 'X'
     private Paint gridPaint, oPaint, xPaint;
-    private GameEngine gameEngine;
+//    private GameEngine gameEngine;
     private GameActivity activity;
 
 
@@ -36,7 +36,7 @@ public class BoardView extends View {
         super(context, attrs);
         gridPaint = new Paint();
 
-        boardSize = 9;
+        boardSize = 13;
 
         // smooths out the edges of what is being drawn
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -53,10 +53,10 @@ public class BoardView extends View {
 //    public void setMainActivity(GameActivity activity) {
 //        this.activity = activity;
 //    }
-
-    public void setGameEngine(GameEngine gameEngine) {
-        this.gameEngine = gameEngine;
-    }
+//
+//    public void setGameEngine(GameEngine gameEngine) {
+//        this.gameEngine = gameEngine;
+//    }
 
 
 
