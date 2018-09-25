@@ -36,7 +36,7 @@ public class BoardView extends View {
         super(context, attrs);
         gridPaint = new Paint();
 
-        boardSize = 7;
+        boardSize = 9;
 
         // smooths out the edges of what is being drawn
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
