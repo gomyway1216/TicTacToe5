@@ -2,11 +2,6 @@ package com.yudaiyaguchi.tic_tac_toe_5;
 
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 // minMax with alph-beta pruning
 public class AI {
     private int maxDepth;
@@ -26,96 +21,21 @@ public class AI {
 
     public void move(BoardState state) {
         counter++;
-        move = alphabetaSearch(state, maxDepth);
-//        move = alphabetaSearch2(state, maxDepth);
+//        move = alphabetaSearch(state, maxDepth);
+        move = search(state, maxDepth);
+// ;
     }
 
     public String getMove() {
         return move;
     }
 
-//    public String alphabetaSearch2(BoardState state, int maxDepth) {
-//        int v = Integer.MIN_VALUE;
-//        int alpha = Integer.MIN_VALUE;
-//        int beta = Integer.MAX_VALUE;
-//        String bestMove = null;
-//        // returns the move with the smallest index in the case of ties.
-//        // How can I do that? It can only return v value
-//
-//        if(state.getIsFirstMove()) {
-//            int center = state.getBoardSize()/2;
-////            if(state.isLegalMove(center,center)) {
-////                Log.d(TAG, "inside if best move= " + bestMove) ;
-////            }
-//
-////            Log.d(TAG, " best move= " + bestMove) ;
-//
-//            return center +"," + center;
-//        }
-//        int max = -100000;
-//        bestMove = "0,0";
-//
-////        for(int k = 0; k < state.getBoard().length; k++)
-////            for(int l = 0; l < state.getBoard().length; l++)
-////                Log.d(TAG, "state b : k : " + k + " l : " + l + " " + state.getBoard()[k][l]) ;
-//        BoardState bs;
-//
-//
-//
-//        int eval = 0;
-//        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
-//        int rMin = state.getMinRow() > 1 ? state.getMinRow() - 1 : state.getMinRow();
-//        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
-//        int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
-//
-//        for (int i = rMin; i <= rMax; i++) {
-//            for(int j = cMin; j < cMax; j++) {
-//                if (state.isLegalMove(i, j)) {
-////                    Log.d(TAG, " each======== i : " + i + " j : " + j + " " + eval) ;
-//                    eval = evaluate(state.applyMove(state.getAiTurn(), i, j));
-////                    Log.d(TAG, " each======== eval : " + eval) ;
-////                    if(i == 1 && j == 2)
-////                        eval = 10000;
-//
-////                    Log.d(TAG, "evalllllllllll : " + i + " l : " + j + " " + eval) ;
-////                    Log.d(TAG, "state.getAiTurn()" +  state.getAiTurn()) ;
-////                    bs = state.applyMove(state.getAiTurn(), i, j);
-//////                    Log.d(TAG, "state 1 : " + 1 + " l : " + 1 + " " + state.getBoard()[0][0]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 0 + " l : " + 0 + " " + bs.getBoard()[0][0]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 0 + " l : " + 1 + " " + bs.getBoard()[0][1]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 0 + " l : " + 2 + " " + bs.getBoard()[0][2]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 1 + " l : " + 0 + " " + bs.getBoard()[1][0]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 1 + " l : " + 1 + " " + bs.getBoard()[1][1]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 1 + " l : " + 2 + " " + bs.getBoard()[1][2]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 2 + " l : " + 0 + " " + bs.getBoard()[2][0]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 2 + " l : " + 1 + " " + bs.getBoard()[2][1]) ;
-////                    Log.d(TAG, "state  bs 1 : " + 2 + " l : " + 2 + " " + bs.getBoard()[2][2]) ;
-//
-////                    for(int k = 0; k < bs.getBoard().length; k++)
-////                        for(int l = 0; l < bs.getBoard().length; l++)
-////                            Log.d(TAG, "bs.board : k : " +  k + " l : " + l + " " + bs.getBoard()[i][j]) ;
-////                    Log.d(TAG, "eval== " + eval + " i : " + " j : " + j) ;
-//                    if(eval > max) {
-////                        Log.d(TAG, "best move!!!!!" + i + "  : " + j) ;
-//                        bestMove = i + "," + j;
-//                        max = eval;
-//                    }
-//
-//
-//                }
-//            }
-//        }
-//
-//
-//      return bestMove;
-//    }
-
     public String alphabetaSearch(BoardState state, int maxDepth) {
         // function ALPHA-BETA-SEARCH(state) returns an action v ←MAX-VALUE(state,−∞,+∞)
         // return the action in ACTIONS(state) with value v
-        double v = Double.MIN_VALUE;
-        double alpha = Double.MIN_VALUE;
-        double beta = Double.MAX_VALUE;
+        int v = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
         String bestMove = null;
         // returns the move with the smallest index in the case of ties.
         // How can I do that? It can only return v value
@@ -126,19 +46,6 @@ public class AI {
 //                Log.d(TAG, "inside if best move= " + bestMove) ;
                 bestMove = center + "," + center;
             }
-//            else if(state.isLegalMove(center+1,center)) {
-//                bestMove = (center+1) + "," + center;
-//            } else if(state.isLegalMove(center-1,center)) {
-//                bestMove = (center-1) + "," + center;
-//            } else if(state.isLegalMove(center,center+1)) {
-//                bestMove = center + "," + (center+1);
-//            }  else if(state.isLegalMove(center,center-1)) {
-//                bestMove = center + "," + (center-1);
-//            } else {
-//                bestMove = 0 + "," + 0;
-//            }
-
-//            Log.d(TAG, " best move= " + bestMove) ;
 
             return bestMove;
         }
@@ -150,24 +57,34 @@ public class AI {
         int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
         int cMin = state.getMinCol() > 0 ? state.getMinCol() - 1 : state.getMinCol();
 
+        if(counter == 4)
+            Log.d("MinMax", "MinMaxBreak");
+
         boolean isBreak = false;
         for (int i = rMin; i <= rMax; i++) {
             if(isBreak) break;
 //            i = 6;
             for (int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
-                    v = Math.max(v, minValue(state.applyMove('X', i, j), maxDepth,
-                            maxDepth - 1, alpha, beta, i, j));
+                    // it returns always smallest number of double
+                    int temp = minValue(state.applyMove(i, j), maxDepth,maxDepth - 1, alpha, beta, i, j);
+                    Log.d("first Loop temp : ", "first Loop temp : " + i + "," + j + "v value " + v);
+                    v = Math.max(v, temp);
+
+
                     // v = getBestScore()
 //                    Log.d(TAG, "before alpha =" + alpha) ;
+                    Log.d("first Loop v Value : ", "first Loop v Value : " + i + "," + j + "v value " + v);
                     if (v > alpha) {
 //                        count++;
                         alpha = v;
+                        Log.d("bestMove : ", "bestMove : " + i + "," + j + "v value " + v);
                         bestMove = i + "," + j;
 //                        Log.d(TAG, "v>alpha and v = " + v + "alpha =" + alpha) ;
                     }
 
                     if (alpha >= beta) {
+                        Log.d("Breaking first loop", "Breaking first loop" + i + "," + j + "v value " + v);
                         isBreak = true;
                         break;
                     }
@@ -185,9 +102,17 @@ public class AI {
     }
 
 
-    public double maxValue(BoardState state, int maxDepth, int currentDepth, double alpha, double beta, int row, int col) {
-        if (currentDepth == 0)
+    public int maxValue(BoardState state, int maxDepth, int currentDepth, int alpha, int beta, int row, int col) {
+        if (currentDepth == 0) {
+            if(counter == 3 && row == 4 && col == 1)
+                Log.d("check!", "check! i, j : " + row + ", " + col );
             return evaluate3(state, row, col, state.getUserTurn());
+
+        }
+
+//        if(counter == 4) {
+//            Log.d("check!", "check! i, j : " + row + ", " + col );
+//        }
 
 
         int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
@@ -195,12 +120,12 @@ public class AI {
         int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
         int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
 
-        double v = Double.MIN_VALUE;
+        int v = Integer.MIN_VALUE;
         for (int i = rMin; i <= rMax; i++) {
             for(int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
-                    v = Math.max(v, minValue(state.applyMove('X', i, j), maxDepth,
-                            currentDepth - 1, alpha, beta, i, j));
+                    int temp = minValue(state.applyMove(i, j), maxDepth,currentDepth - 1, alpha, beta, i, j);
+                    v = Math.max(v, temp);
 
                     if (v >= beta)
                         return v;
@@ -222,7 +147,7 @@ public class AI {
         return v;
     }
 
-    public double minValue(BoardState state, int maxDepth, int currentDepth, double alpha, double beta, int row, int col) {
+    public int minValue(BoardState state, int maxDepth, int currentDepth, int alpha, int beta, int row, int col) {
         if (currentDepth == 0)
             return evaluate3(state, row, col, state.getAiTurn());
 
@@ -231,14 +156,18 @@ public class AI {
         int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
         int cMin = state.getMinCol() > 1 ? state.getMinCol() - 1 : state.getMinCol();
 
-        double v = Double.MAX_VALUE;
+        int v = Integer.MAX_VALUE;
         for (int i = rMin; i <= rMax; i++) {
             for(int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
-                    v = Math.min(v, maxValue(state.applyMove('O', i, j), maxDepth,
-                            currentDepth - 1, alpha, beta, i, j));
-                    if (v <= alpha)
+                    int opponentMax = maxValue(state.applyMove(i, j), maxDepth, currentDepth - 1, alpha, beta, i, j);
+                    int opponentValue = evaluate3(state, i, j, state.getUserTurn());
+                    // if opponentMax it is  negative
+                    v = Math.min(v, opponentMax); // this is trying to find the smallest value
+                    if (v <= alpha) {
+                        Log.d("second loop : v Value", "second loop : v Value : " + v);
                         return v;
+                    }
 
                     beta = Math.min(beta, v);
 
@@ -248,15 +177,84 @@ public class AI {
             }
         }
 
+            // it doesn't reach here and I am sure it is returning value at if (v <= alpha) above
+//        Log.d("second loop : v Value", "second loop : v Value : " + v);
         if (v == Integer.MAX_VALUE) {
 //            Log.d(TAG, "min score = " + evaluate(state)) ;
 
             return evaluate3(state, row, col, state.getAiTurn());
         }
+
         return v;
     }
 
-    private double evaluate3(BoardState state, int row, int col, char turn) {
+    public String search(BoardState state, int maxDepth) {
+        // function ALPHA-BETA-SEARCH(state) returns an action v ←MAX-VALUE(state,−∞,+∞)
+        // return the action in ACTIONS(state) with value v
+        int v = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
+        String bestMove = null;
+        // returns the move with the smallest index in the case of ties.
+        // How can I do that? It can only return v value
+
+        if(state.getIsFirstMove()) {
+            int center = state.getBoardSize()/2;
+            if(state.isLegalMove(center,center)) {
+//                Log.d(TAG, "inside if best move= " + bestMove) ;
+                bestMove = center + "," + center;
+            }
+
+            return bestMove;
+        }
+
+//        int count =0;
+
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 0 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 0 ? state.getMinCol() - 1 : state.getMinCol();
+
+        if(counter == 4)
+            Log.d("MinMax", "MinMaxBreak");
+
+        int attackValue = Integer.MIN_VALUE;
+        int protectValue = Integer.MIN_VALUE;
+        String attackTemp = null;
+        String protectTemp = null;
+
+        boolean isBreak = false;
+        for (int i = rMin; i <= rMax; i++) {
+            if (isBreak) break;
+//            i = 6;
+            for (int j = cMin; j <= cMax; j++) {
+                if (state.isLegalMove(i, j)) {
+                    // every single time, AI will choose to attack or protect
+
+                    // ai move
+                    int attackValueTemp = evaluate3(state.applyMove(i, j), i, j, state.getAiTurn());
+                    if (attackValue < attackValueTemp) {
+                        attackValue = attackValueTemp;
+                        attackTemp = i + "," + j;
+                    }
+                    // opponent move
+                    int protectValueTemp = -evaluate3(state.applyMove(i, j), i, j, state.getUserTurn());
+                    if (protectValue < protectValueTemp) {
+                        protectValue = protectValueTemp;
+                        protectTemp = i + "," + j;
+                    }
+                }
+            }
+        }
+            if(attackValue > protectValue)
+                bestMove = attackTemp;
+            else
+                bestMove = protectTemp;
+
+        return bestMove;
+    }
+
+    private int evaluate3(BoardState state, int row, int col, char turn) {
         char current = turn;
 //        char current = state.getCurrentPlayer();
         char opponent = state.getCurrentPlayer();
@@ -266,21 +264,21 @@ public class AI {
         String diagonalLTR = getPattern(state, row, col, 1, 1, turn);
         String diagonalRTL = getPattern(state, row, col, 1, -1, turn);
         String row5 = current+""+current+""+current+""+current+""+current;
-        double eval = 0.0;
+        int eval = 0;
 
         Log.d("evaluate3", "evaluate3 is called");
 
         if(horizontal.contains(row5) || vertical.contains(row5) || diagonalLTR.contains(row5)
-                || diagonalRTL.contains(row5))  eval+= 10000000000.0;
+                || diagonalRTL.contains(row5))  eval+= 1000000000;
 
 //        if(row == 0 && col == 1)    Log.d("positions", "This should be huge! " + eval);
-        if(row == 6 && col == 3 && counter == 4) {
-            Log.d("positions", "This should be huge! " + horizontal);
-            Log.d("positions", "This should be huge! " + vertical);
-            Log.d("positions", "This should be huge! " + diagonalLTR);
-            Log.d("positions", "This should be huge! " + diagonalRTL);
-
-        }
+//        if(row == 6 && col == 3 && counter == 4) {
+//            Log.d("positions", "This should be huge! " + horizontal);
+//            Log.d("positions", "This should be huge! " + vertical);
+//            Log.d("positions", "This should be huge! " + diagonalLTR);
+//            Log.d("positions", "This should be huge! " + diagonalRTL);
+//
+//        }
 
 
         Log.d("positions", "This should be huge! " + row + "," + col + " val " + eval);
@@ -344,40 +342,16 @@ public class AI {
         if(diagonalLTR.contains(normal3B))  eval+= 1000;
         if(diagonalRTL.contains(normal3B))  eval+= 1000;
 
-        return eval+5;
+
+        return turn == state.getAiTurn() ? eval+5 : -(eval+5);
+//        return eval+5;
     }
 
     private String getPattern(BoardState state, int row, int col, int dr, int dc, char turn) {
-        double point = 0;
-
-        // check OOOOO
-//        char tempCurrentPlayer = state.getCurrentPlayer() == 'X' ? 'O' : 'X';
-//        char tempOpponent = state.getCurrentPlayer();
-//        int count  = 1; // center stone should be also counted
-//        int r = row + dr;
-//        int c = col + dc;
-//        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && state.board[r][c] == tempCurrentPlayer) {
-//            count++;
-//            r += dr;
-//            c += dc;
-//        }
-//
-//        if(count >= 5)  return 10000000.0;
-//
-//        r = row - dr;
-//        c = col - dc;
-//        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && state.board[r][c] == state.currentPlayer) {
-//            count++;
-//            r -= dr;
-//            c -= dc;
-//        }
-//
-//        if(count >= 5)  return 10000000.0;
-
         int r = row + dr;
         int c = col + dc;
         int k = 1;
-        double eval = 1.0;
+//        double eval = 1.0;
 //        char tempCurrentPlayer = turn;
         char tempOpponent = turn == 'X' ? 'O' : 'X';
         // search the length of 5 until it hits to the opponent stone or edge. Edge is considered to be th opponent stone?

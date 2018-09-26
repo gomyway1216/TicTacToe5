@@ -40,7 +40,8 @@ public class GameActivity extends AppCompatActivity {
         Log.d("depth: "," passed depth: " + depth);
 
         // I will hard code the board size winning chanin and modify it later.
-        boardState = new BoardState(13, 5, 1);
+        boardState = new BoardState(13, 5, 3
+        );
 
 
 //        gameEngine = new GameEngine();

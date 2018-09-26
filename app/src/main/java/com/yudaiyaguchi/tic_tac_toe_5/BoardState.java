@@ -240,7 +240,7 @@ public class BoardState {
 
     // this method creates the new board using copy constructor and apply the move
     // this doesn't affect the actual board state that user can see.
-    public BoardState applyMove(char player, int row, int col) {
+    public BoardState applyMove(int row, int col) {
         BoardState afterMove = new BoardState(this);
 //        afterMove.board[row][col] = player;
         afterMove.setCurrentPlayer(currentPlayer);
