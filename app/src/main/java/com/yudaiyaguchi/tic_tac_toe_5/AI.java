@@ -23,6 +23,7 @@ public class AI {
         counter++;
 //        move = alphabetaSearch(state, maxDepth);
         move = search(state, maxDepth);
+        move = search2(state, maxDepth);
 // ;
     }
 
@@ -254,6 +255,82 @@ public class AI {
         return bestMove;
     }
 
+
+    public String search2(BoardState state, int maxDepth) {
+        // function ALPHA-BETA-SEARCH(state) returns an action v ←MAX-VALUE(state,−∞,+∞)
+        // return the action in ACTIONS(state) with value v
+        int v = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
+        String bestMove = null;
+        // returns the move with the smallest index in the case of ties.
+        // How can I do that? It can only return v value
+
+        if(state.getIsFirstMove()) {
+            int center = state.getBoardSize()/2;
+            if(state.isLegalMove(center,center)) {
+//                Log.d(TAG, "inside if best move= " + bestMove) ;
+                bestMove = center + "," + center;
+            }
+
+            return bestMove;
+        }
+
+//        int count =0;
+
+        int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
+        int rMin = state.getMinRow() > 0 ? state.getMinRow() - 1 : state.getMinRow();
+        int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
+        int cMin = state.getMinCol() > 0 ? state.getMinCol() - 1 : state.getMinCol();
+
+        if(counter == 4)
+            Log.d("MinMax", "MinMaxBreak");
+
+        int attackValue = Integer.MIN_VALUE;
+        int protectValue = Integer.MIN_VALUE;
+        int sumMoveValue = 0;
+        String attackTemp = null;
+        String protectTemp = null;
+        String finalMove = null;
+
+        boolean isBreak = false;
+        for (int i = rMin; i <= rMax; i++) {
+            if (isBreak) break;
+//            i = 6;
+            for (int j = cMin; j <= cMax; j++) {
+                if (state.isLegalMove(i, j)) {
+                    // every single time, AI will choose to attack or protect
+
+                    // ai move
+                    int attackValueTemp = evaluate3(state.applyMove(i, j), i, j, state.getAiTurn());
+//                    if (attackValue < attackValueTemp) {
+//                        attackValue = attackValueTemp;
+////                        attackTemp = i + "," + j;
+//                    }
+                    // opponent move
+                    int protectValueTemp = -evaluate3(state.applyMove(i, j), i, j, state.getUserTurn());
+//                    if (protectValue < protectValueTemp) {
+//                        protectValue = protectValueTemp;
+////                        protectTemp = i + "," + j;
+//                    }
+
+                    int sumMoveValueTemp = 2 * attackValueTemp + protectValueTemp;
+
+                    if (sumMoveValue < sumMoveValueTemp) {
+                        sumMoveValue = sumMoveValueTemp;
+                        finalMove = i + "," + j;
+                    }
+                }
+            }
+        }
+//        if(attackValue > protectValue)
+//            bestMove = attackTemp;
+//        else
+//            bestMove = protectTemp;
+
+        return finalMove;
+    }
+
     private int evaluate3(BoardState state, int row, int col, char turn) {
         char current = turn;
 //        char current = state.getCurrentPlayer();
@@ -269,7 +346,7 @@ public class AI {
         Log.d("evaluate3", "evaluate3 is called");
 
         if(horizontal.contains(row5) || vertical.contains(row5) || diagonalLTR.contains(row5)
-                || diagonalRTL.contains(row5))  eval+= 1000000000;
+                || diagonalRTL.contains(row5))  eval+= 100000000;
 
 //        if(row == 0 && col == 1)    Log.d("positions", "This should be huge! " + eval);
 //        if(row == 6 && col == 3 && counter == 4) {
@@ -281,13 +358,16 @@ public class AI {
 //        }
 
 
+        // int temp = currentTurn (it could be AI or Human) * 1.5 + opponentturn
+        // and the choose the maximus sum. Maybe I have to decrement of 5 in a row so that it can operate 1.5
+
         Log.d("positions", "This should be huge! " + row + "," + col + " val " + eval);
 
         String row4Win = " " + current+""+current+""+current+""+current+ " ";
-        if(horizontal.contains(row4Win))    eval+= 10000000;
-        if(vertical.contains(row4Win))      eval+= 10000000;
-        if(diagonalLTR.contains(row4Win))   eval+= 10000000;
-        if(diagonalRTL.contains(row4Win))   eval+= 10000000;
+        if(horizontal.contains(row4Win))    eval+= 1000000;
+        if(vertical.contains(row4Win))      eval+= 1000000;
+        if(diagonalLTR.contains(row4Win))   eval+= 1000000;
+        if(diagonalRTL.contains(row4Win))   eval+= 1000000;
 
         String normal4A = " " + current+""+current+""+current+""+current;
         String normal4B = current+""+current+""+current+""+current + " ";
@@ -297,50 +377,50 @@ public class AI {
 //                || vertical.contains(row4Win) && diagonalLTR.contains(row4Win)
 //                || vertical.contains(row4Win) && diagonalRTL.contains(row4Win)
 //                || vertical.contains(row4Win) && )
-        if(horizontal.contains(normal4A))    eval+= 100000;
-        if(vertical.contains(normal4A))      eval+= 100000;
-        if(diagonalLTR.contains(normal4A))   eval+= 100000;
-        if(diagonalRTL.contains(normal4A))   eval+= 100000;
-        if(horizontal.contains(normal4B))    eval+= 100000;
-        if(vertical.contains(normal4B))      eval+= 100000;
-        if(diagonalLTR.contains(normal4B))   eval+= 100000;
-        if(diagonalRTL.contains(normal4B))   eval+= 100000;
+        if(horizontal.contains(normal4A))    eval+= 10000;
+        if(vertical.contains(normal4A))      eval+= 10000;
+        if(diagonalLTR.contains(normal4A))   eval+= 10000;
+        if(diagonalRTL.contains(normal4A))   eval+= 10000;
+        if(horizontal.contains(normal4B))    eval+= 10000;
+        if(vertical.contains(normal4B))      eval+= 10000;
+        if(diagonalLTR.contains(normal4B))   eval+= 10000;
+        if(diagonalRTL.contains(normal4B))   eval+= 10000;
 
         String row3 = " " + current+""+current+""+current+ " ";
-        if(horizontal.contains(row3))   eval+= 50000;
-        if(vertical.contains(row3))     eval+= 50000;
-        if(diagonalLTR.contains(row3))  eval+= 50000;
-        if(diagonalRTL.contains(row3))  eval+= 50000;
+        if(horizontal.contains(row3))   eval+= 5000;
+        if(vertical.contains(row3))     eval+= 5000;
+        if(diagonalLTR.contains(row3))  eval+= 5000;
+        if(diagonalRTL.contains(row3))  eval+= 5000;
 
         String broken3T1 = " " + current+""+current+ " " + current + " ";
         String broken3T2 = " " + current+ " "+current+""+current + " ";
-        if(horizontal.contains(broken3T1))   eval+= 30000;
-        if(vertical.contains(broken3T2))     eval+= 30000;
-        if(diagonalLTR.contains(broken3T1))  eval+= 30000;
-        if(diagonalRTL.contains(broken3T2))  eval+= 30000;
-        if(horizontal.contains(broken3T1))   eval+= 30000;
-        if(vertical.contains(broken3T2))     eval+= 30000;
-        if(diagonalLTR.contains(broken3T1))  eval+= 30000;
-        if(diagonalRTL.contains(broken3T2))  eval+= 30000;
+        if(horizontal.contains(broken3T1))   eval+= 3000;
+        if(vertical.contains(broken3T2))     eval+= 3000;
+        if(diagonalLTR.contains(broken3T1))  eval+= 3000;
+        if(diagonalRTL.contains(broken3T2))  eval+= 3000;
+        if(horizontal.contains(broken3T1))   eval+= 3000;
+        if(vertical.contains(broken3T2))     eval+= 3000;
+        if(diagonalLTR.contains(broken3T1))  eval+= 3000;
+        if(diagonalRTL.contains(broken3T2))  eval+= 3000;
 
         // open 2 EXXE #E indicates empty
         String row2 = " " + turn + turn + " ";
 
-        if(horizontal.contains(row2))   eval+= 3000;
-        if(vertical.contains(row2))     eval+= 3000;
-        if(diagonalLTR.contains(row2))  eval+= 3000;
-        if(diagonalRTL.contains(row2))  eval+= 3000;
+        if(horizontal.contains(row2))   eval+= 300;
+        if(vertical.contains(row2))     eval+= 300;
+        if(diagonalLTR.contains(row2))  eval+= 300;
+        if(diagonalRTL.contains(row2))  eval+= 300;
 
         String normal3A = " " + turn + turn + turn;
         String normal3B = turn + turn + turn + " ";
-        if(horizontal.contains(normal3A))   eval+= 1000;
-        if(vertical.contains(normal3A))     eval+= 1000;
-        if(diagonalLTR.contains(normal3A))  eval+= 1000;
-        if(diagonalRTL.contains(normal3A))  eval+= 1000;
-        if(horizontal.contains(normal3B))   eval+= 1000;
-        if(vertical.contains(normal3B))     eval+= 1000;
-        if(diagonalLTR.contains(normal3B))  eval+= 1000;
-        if(diagonalRTL.contains(normal3B))  eval+= 1000;
+        if(horizontal.contains(normal3A))   eval+= 100;
+        if(vertical.contains(normal3A))     eval+= 100;
+        if(diagonalLTR.contains(normal3A))  eval+= 100;
+        if(diagonalRTL.contains(normal3A))  eval+= 100;
+        if(horizontal.contains(normal3B))   eval+= 100;
+        if(vertical.contains(normal3B))     eval+= 100;
+        if(diagonalLTR.contains(normal3B))  eval+= 100;
+        if(diagonalRTL.contains(normal3B))  eval+= 100;
 
 
         return turn == state.getAiTurn() ? eval+5 : -(eval+5);

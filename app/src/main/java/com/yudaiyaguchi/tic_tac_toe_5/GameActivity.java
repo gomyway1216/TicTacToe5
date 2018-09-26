@@ -34,7 +34,7 @@ public class GameActivity extends AppCompatActivity {
 
 
         // user chose to go first
-        char userTurn = intent.getCharExtra("turn", 'O');
+        char userTurn = intent.getCharExtra("turn", 'X');
         int depth = intent.getIntExtra("depth", 1);
         Log.d("turn: "," passed turn: " + userTurn);
         Log.d("depth: "," passed depth: " + depth);
