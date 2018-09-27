@@ -70,6 +70,11 @@ public class GameActivity extends AppCompatActivity {
             newGame();
         }
 
+        if(item.getItemId() == R.id.action_home) {
+            Intent homeIntent =  new Intent(GameActivity.this, HomeActivity.class);
+            startActivity(homeIntent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -1,9 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    tools:context=".HomeActivity"
+    android:gravity="center">
 
-</android.support.constraint.ConstraintLayout>
+    <RadioGroup
+        android:id="@+id/boardSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/board_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9 X 9"/>
+
+        <RadioButton
+            android:id="@+id/board_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11 X 11"
+            android:layout_marginLeft="10dp"/>
+
+        <RadioButton
+            android:id="@+id/board_13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="13 X 13"
+            android:checked = "true"
+            android:layout_marginLeft="10dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/player2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 Player"
+        android:layout_marginTop="50dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/userTurn"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        >
+
+        <RadioButton android:id="@+id/userFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You First: X"
+            android:checked = "true"/>
+        <RadioButton android:id="@+id/aiFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI First: O"
+            android:layout_marginLeft="30dp"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/level1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 Player Level1"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/level2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 Player Level2"
+        android:layout_marginTop="10dp"/>
+
+
+
+
+
+</LinearLayout>

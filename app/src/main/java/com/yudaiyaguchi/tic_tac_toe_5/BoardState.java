@@ -17,6 +17,7 @@ public class BoardState {
     private int minRow;
     private int maxCol;  // usually starting from center and it exclude
     private int minCol;
+    private int counter = 0;
     // more than 2 outside of most outside stone
 
     public BoardState(int boardSize, int wChain, int maxDepth) {
@@ -127,6 +128,7 @@ public class BoardState {
         if(isEnded(row, col, 1, 1)) return true;
         if(isEnded(row, col, 1, -1)) return true;
         changeTurn();
+        counter++;
         return false;
     }
 
@@ -170,65 +172,6 @@ public class BoardState {
         return false;
     }
 
-    public boolean isEnded() {
-        for(int i = 0; i < boardSize; i++) {
-            for(int j = 0; j < boardSize; j++) {
-                if(board[i][j] != ' ') {
-                    char check = board[i][j];
-                    int startCol = j + 1;
-                    int counterRow = 1;
-                    // check row from left to right
-                    while (startCol < boardSize && check == board[i][startCol]) {
-                        counterRow++;
-                        startCol++;
-                    }
-
-                    if(counterRow >= wChain)
-                        return true;
-
-                    int startRow = i + 1;
-                    int counterCol = 1;
-                    // check col from top to down
-                    while (startRow < boardSize && check == board[startRow][j]) {
-                        counterCol++;
-                        startRow++;
-                    }
-
-                    if(counterCol >= wChain)
-                        return true;
-
-                    int startDiagCol = j + 1;
-                    int startDiagRow = i + 1;
-                    int counterDiag = 1;
-                    // check diagonal from top left to bottom right
-                    while (startDiagCol < boardSize && startDiagRow < boardSize && check == board[startDiagRow][startDiagCol]) {
-                        counterDiag++;
-                        startDiagCol++;
-                        startDiagRow++;
-                    }
-
-                    if(counterDiag >= wChain)
-                        return true;
-
-                    int startDiag2Row = i + 1;
-                    int startDiag2Col = j - 1;
-                    int counterDiag2 = 1;
-                    // check diagonal from top right to bottom left
-                    while (startDiag2Row < boardSize && startDiag2Col >= 0 && check == board[startDiag2Row][startDiag2Col]) {
-                        counterDiag2++;
-                        startDiag2Row++;
-                        startDiag2Col--;
-                    }
-
-                    if(counterDiag2 >= wChain)
-                        return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public boolean isLegalMove(int row, int col) {
         if (board[row][col] == ' ')
             return true;
@@ -258,5 +201,9 @@ public class BoardState {
 
     public int getMinCol() {
         return minCol;
+    }
+
+    public boolean isBoardFilled() {
+        return counter == boardSize * boardSize;
     }
 }

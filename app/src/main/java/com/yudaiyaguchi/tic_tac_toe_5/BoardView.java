@@ -1,6 +1,5 @@
 package com.yudaiyaguchi.tic_tac_toe_5;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
 
 public class BoardView extends View {
     private static final int LINE_THICK = 5;
@@ -51,7 +49,6 @@ public class BoardView extends View {
         this.boardState = boardState;
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -72,7 +69,6 @@ public class BoardView extends View {
     @Override
     protected  void onDraw(Canvas canvas) {
         drawGrid(canvas);
-//        drawBoard(canvas);
         drawPieces(canvas);
     }
 
@@ -89,10 +85,13 @@ public class BoardView extends View {
                     boolean userWin = boardState.move(y, x);
 //                    boolean userWin = boardState.isEnded();
                     invalidate();
+
                     // if user win
                     if(userWin)
                         activity.gameEnded(boardState.getUserTurn());
                     else {
+                        if(boardState.isBoardFilled()) activity.gameEnded('D');
+
                         boolean aiWin = boardState.aiMove();
 //                        boolean aiWin = boardState.isEnded();
                         invalidate();
@@ -100,6 +99,8 @@ public class BoardView extends View {
                         if(aiWin)
                             activity.gameEnded((boardState.getAiTurn()));
                     }
+
+                    if(boardState.isBoardFilled()) activity.gameEnded('D');
                 }
             }
         }
