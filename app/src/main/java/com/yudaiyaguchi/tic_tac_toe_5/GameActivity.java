@@ -14,10 +14,7 @@ import com.yudaiyaguchi.tic_tac_toe_5.R;
 public class GameActivity extends AppCompatActivity {
 
     private BoardView boardView;
-//    private GameEngine gameEngine;
     private BoardState boardState;
-
-
     private int boardSize;
     private int chain; // length to win ex 5 for gomoku
     private int mode; // 1 human vs human,
@@ -31,8 +28,6 @@ public class GameActivity extends AppCompatActivity {
         boardView = (BoardView) findViewById(R.id.board);
 
         Intent intent = getIntent();
-
-
         // user chose to go first
         char userTurn = intent.getCharExtra("turn", 'X');
         int depth = intent.getIntExtra("depth", 1);
@@ -43,11 +38,6 @@ public class GameActivity extends AppCompatActivity {
         boardState = new BoardState(13, 5, 3
         );
 
-
-//        gameEngine = new GameEngine();
-//        boardView.setGameEngine(gameEngine);
-
-        //
         boardView.setBoardState(boardState);
         boardView.setGameActivity(this);
 
@@ -66,9 +56,6 @@ public class GameActivity extends AppCompatActivity {
             boardView.invalidate();
         }
 
-
-
-//        boardView.setMainActivity(this);
     }
 
     @Override
@@ -100,13 +87,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void newGame() {
-//        gameEngine.newGame();
-
-
-//        boardState.newGame();
-//        boardView.invalidate();
-
         this.recreate();
-
     }
 }

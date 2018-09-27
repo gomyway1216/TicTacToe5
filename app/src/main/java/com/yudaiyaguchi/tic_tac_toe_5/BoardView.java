@@ -17,13 +17,8 @@ public class BoardView extends View {
     private static final int ELT_MARGIN = 20;
     private static final int ELT_STROKE_WIDTH = 15;
     private int width, height, eltW, eltH;
-    // oPaint is just the paint of '0' and xPaint is 'X'
     private Paint gridPaint, oPaint, xPaint;
-//    private GameEngine gameEngine;
     private GameActivity activity;
-
-
-
     private int squareLength, boxLength;
     private int boardSize;
     private BoardState boardState;
@@ -46,44 +41,15 @@ public class BoardView extends View {
         // use the same setting as oPaint
         xPaint = new Paint(oPaint);
         xPaint.setColor(Color.BLUE);
-
-
     }
 
-//    public void setMainActivity(GameActivity activity) {
-//        this.activity = activity;
-//    }
-//
-//    public void setGameEngine(GameEngine gameEngine) {
-//        this.gameEngine = gameEngine;
-//    }
-
-
-
-    //
     public void setGameActivity(GameActivity gameContainer) {
         this.activity = gameContainer;
     }
-    //
+
     public void setBoardState(BoardState boardState) {
         this.boardState = boardState;
     }
-
-
-
-
-
-
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        height = View.MeasureSpec.getSize(heightMeasureSpec);
-//        width = View.MeasureSpec.getSize(widthMeasureSpec);
-//        // I think this eltW and eltH is the with and height of each boxes
-//        eltW = (width - LINE_THICK) / 3;
-//        eltH = (height - LINE_THICK) / 3;
-//
-//        setMeasuredDimension(width, height);
-//    }
 
 
     @Override
@@ -92,9 +58,6 @@ public class BoardView extends View {
 
         height = MeasureSpec.getSize(heightMeasureSpec);
         width = MeasureSpec.getSize(widthMeasureSpec);
-
-//        int width = getMeasuredWidth();
-//        int height = getMeasuredHeight();
         squareLength = Math.min(width, height);
         boxLength =  squareLength / boardSize;
 
@@ -106,41 +69,6 @@ public class BoardView extends View {
                 MeasureSpec.makeMeasureSpec(squareLength, MeasureSpec.EXACTLY));
     }
 
-
-
-
-    //
-    // #
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        height = View.MeasureSpec.getSize(heightMeasureSpec);
-//        width = View.MeasureSpec.getSize(widthMeasureSpec);
-//
-//
-//        // I think this eltW and eltH is the with and height of each boxes
-//        eltW = (width - LINE_THICK) / 3;
-//        eltH = (height - LINE_THICK) / 3;
-//
-//
-//        if(width > height)
-//            squareLength = height;
-//        else
-//            squareLength = width;
-//
-//        // set the size of each box
-//        // each box should be square
-//        boxLength =  squareLength / boardSize;
-//        // the entire board should be also square
-//        setMeasuredDimension(width, height);
-//
-//    }
-
-
-
-
-
-
-
     @Override
     protected  void onDraw(Canvas canvas) {
         drawGrid(canvas);
@@ -148,53 +76,14 @@ public class BoardView extends View {
         drawPieces(canvas);
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        if(!gameEngine.isEnded() && event.getAction() == MotionEvent.ACTION_DOWN) {
-//            int x = (int) (event.getX() / eltW);
-//            int y = (int) (event.getY() / eltH);
-//            char win = gameEngine.play(x, y);
-//            invalidate();
-//
-//            if(win != ' ') {
-//                activity.gameEnded(win);
-//            } else {
-//                // computer plays
-//                win = gameEngine.randomBot();
-//                invalidate();
-//
-//                if(win != ' ') {
-//                    activity.gameEnded(win);
-//                }
-//            }
-//        }
-//
-//        return super.onTouchEvent(event);
-//    }
-
-
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // I think this is assuming opponet is CPU
-        // I will modify this later so that Human vs Human can be operated.
-        // this also have to check whether the movement is illigal or not.
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             int x = (int) (event.getX() / boxLength);
             int y = (int) (event.getY() / boxLength);
-//            Log.d("pair: ","pair : " + y + " " + x);
-            // this part would be exchanged with change turn method
-            // this "win", I am not sure
-//            char win = gameEngine.play(x, y);
-//            invalidate();
 
-            // I am not sure whether it is going to work or not.
-//            if(boardState.isLegalMove(x, y)) {
-//                return false;
-            // I think this is assuming that user always goes first
             if(boardState.getUserTurn() == boardState.getCurrentPlayer()) {
                 if(boardState.isLegalMove(y, x)) {
-                    // I am not very sure about these order
                     // call board.move method
 //                    invalidate();
                     boolean userWin = boardState.move(y, x);
@@ -211,50 +100,12 @@ public class BoardView extends View {
                         if(aiWin)
                             activity.gameEnded((boardState.getAiTurn()));
                     }
-                    // call change turn -> this is called inside of move method
-
-                    // check ends
                 }
             }
         }
 
         return super.onTouchEvent(event);
     }
-
-
-//    private void drawBoard(Canvas canvas) {
-//        for(int i = 0; i < 3; i++) {
-//            for(int j = 0; j < 3; j++) {
-//                drawElt(canvas, gameEngine.getBoardstates(i, j), i, j);
-//            }
-//        }
-//    }
-
-//    private void drawGrid(Canvas canvas) {
-//        // x coordinates start from left and
-//        // y coordinates start from top
-//        // so that's why left = eltW * (i +1)
-//        // and top2 = eltH * (i + 1)
-//        for (int i = 0; i < 2; i++) {
-//            // vertical lines
-//            float left = eltW * (i + 1);
-//            float right = left + LINE_THICK;
-//            float top = 0;
-//            float bottom = height;
-//
-//            canvas.drawRect(left, top, right, bottom, gridPaint);
-//
-//            // horizontal lines
-//            float left2 = 0;
-//            float right2 = width;
-//            float top2 = eltH * (i + 1);
-//            float bottom2 = top2 + LINE_THICK;
-//
-//            canvas.drawRect(left2, top2, right2, bottom2, gridPaint);
-//        }
-//    }
-
-
 
     private void drawGrid(Canvas canvas) {
         // x coordinates start from left and
@@ -305,8 +156,6 @@ public class BoardView extends View {
             float cy = (boxLength * y) + boxLength / 2;
             canvas.drawCircle(cx, cy, boxLength / 2 - ELT_MARGIN, oPaint);
         } else if(c == 'X') {
-            // there are somthing, I am not sure,
-            // but I am gonna look at it later.
 
             // drawing should not be starting from the edge of the line,
             // that's why it is adding ELT_MARGIN I think
@@ -328,34 +177,4 @@ public class BoardView extends View {
             canvas.drawLine(startX2, startY2, endX2, endY2, xPaint);
         }
     }
-
-//    private void drawElt(Canvas canvas, char c, int x, int y) {
-//        if(c == '0') {
-//            // move by the length of box and by eltW / 2, it is drawing it to the center of box
-//            float cx = (eltW * x) + eltW / 2;
-//            float cy = (eltH * y) + eltH / 2;
-//
-//            canvas.drawCircle(cx, cy, Math.min(eltW, eltH) / 2 - ELT_MARGIN * 2, oPaint);
-//        } else if(c == 'X') {
-//            // drawing should not be starting from the edge of the line,
-//            // that's why it is adding ELT_MARGIN I think
-//
-//            // this is from left to right of 'X'
-//            float startX = (eltW * x) + ELT_MARGIN;
-//            float startY = (eltH * y) + ELT_MARGIN;
-//            float endX = startX + eltW - ELT_MARGIN * 2;
-//            float endY = startY + eltH - ELT_MARGIN;
-//
-//            canvas.drawLine(startX, startY, endX, endY, xPaint);
-//
-//            // this is from right to left of 'X'
-//            float startX2 = (eltW * (x + 1)) - ELT_MARGIN;
-//            float startY2 = (eltH * y) + ELT_MARGIN;
-//            float endX2 = startX2 - eltW + ELT_MARGIN * 2;
-//            float endY2 = startY2 + eltH - ELT_MARGIN;
-//
-//            canvas.drawLine(startX2, startY2, endX2, endY2, xPaint);
-//        }
-//    }
-
 }
