@@ -84,13 +84,10 @@ public class AI {
                 }
             }
         }
-//        if(finalMove2 == null)
-//            finalMove2 = finalMove;
-//        return aiLevel == 3 ? finalMove2 : finalMove;
         return finalMove;
     }
 
-    // potential min-max for future reference to make it even stronger
+    // potential min-max with alpha-beta pruning for future reference to make AI even stronger
     public String search2(BoardState state, int maxDepth) {
         int v = Integer.MIN_VALUE;
         int alpha = Integer.MIN_VALUE;
@@ -168,7 +165,6 @@ public class AI {
         return v;
     }
 
-
     public int maxValue2(BoardState state, int maxDepth, int currentDepth, int alpha, int beta, int row, int col) {
         if (currentDepth == 0) {
             int attackValue = -evaluate2(state.applyMove(row, col), row, col, state.getUserTurn());
@@ -203,26 +199,26 @@ public class AI {
         return v;
     }
 
+    // Evaluation for level 1
     private int evaluate1(BoardState state, int row, int col, char turn) {
-        char current = turn;
         String horizontal = getPattern(state, row, col, 0, 1, turn);
         String vertical = getPattern(state, row, col, 1, 0, turn);
         String diagonalLTR = getPattern(state, row, col, 1, 1, turn);
         String diagonalRTL = getPattern(state, row, col, 1, -1, turn);
         int eval = 0;
 
-        String row5 = current+""+current+""+current+""+current+""+current;
+        String row5 = turn+""+turn+""+turn+""+turn+""+turn;
         if(horizontal.contains(row5) || vertical.contains(row5) || diagonalLTR.contains(row5)
                 || diagonalRTL.contains(row5))  eval+= 100000000;
 
-        String row4Win = " " + current+""+current+""+current+""+current+ " ";
+        String row4Win = " "+turn+""+turn+""+turn+""+turn+" ";
         if(horizontal.contains(row4Win))    eval+= 3000;
         if(vertical.contains(row4Win))      eval+= 3000;
         if(diagonalLTR.contains(row4Win))   eval+= 3000;
         if(diagonalRTL.contains(row4Win))   eval+= 3000;
 
-        String normal4A = " " + current+""+current+""+current+""+current;
-        String normal4B = current+""+current+""+current+""+current + " ";
+        String normal4A = " "+turn+""+turn+""+turn+""+turn;
+        String normal4B = turn+""+turn+""+turn+""+turn+" ";
         if(horizontal.contains(normal4A))    eval+= 1000;
         if(vertical.contains(normal4A))      eval+= 1000;
         if(diagonalLTR.contains(normal4A))   eval+= 1000;
@@ -232,14 +228,14 @@ public class AI {
         if(diagonalLTR.contains(normal4B))   eval+= 1000;
         if(diagonalRTL.contains(normal4B))   eval+= 1000;
 
-        String row3 = " " + current+""+current+""+current+ " ";
+        String row3 = " "+turn+""+turn+""+turn+" ";
         if(horizontal.contains(row3))   eval+= 1000;
         if(vertical.contains(row3))     eval+= 1000;
         if(diagonalLTR.contains(row3))  eval+= 1000;
         if(diagonalRTL.contains(row3))  eval+= 1000;
 
-        String broken3T1 = " " + current+""+current+ " " + current + " ";
-        String broken3T2 = " " + current+ " "+current+""+current + " ";
+        String broken3T1 = " "+turn+""+turn+" "+turn+" ";
+        String broken3T2 = " "+turn+ " "+turn+""+turn+ " ";
         if(horizontal.contains(broken3T1))   eval+= 1000;
         if(vertical.contains(broken3T2))     eval+= 1000;
         if(diagonalLTR.contains(broken3T1))  eval+= 1000;
@@ -249,14 +245,14 @@ public class AI {
         if(diagonalLTR.contains(broken3T1))  eval+= 1000;
         if(diagonalRTL.contains(broken3T2))  eval+= 1000;
 
-        String row2 = " " + turn + turn + " ";
+        String row2 = " "+turn+turn+" ";
         if(horizontal.contains(row2))   eval+= 2000;
         if(vertical.contains(row2))     eval+= 2000;
         if(diagonalLTR.contains(row2))  eval+= 2000;
         if(diagonalRTL.contains(row2))  eval+= 2000;
 
-        String normal3A = " " + turn + turn + turn;
-        String normal3B = turn + turn + turn + " ";
+        String normal3A = " "+turn+turn+turn;
+        String normal3B = turn+turn+turn+" ";
         if(horizontal.contains(normal3A))   eval+= 1000;
         if(vertical.contains(normal3A))     eval+= 1000;
         if(diagonalLTR.contains(normal3A))  eval+= 1000;
@@ -269,26 +265,26 @@ public class AI {
         return turn == state.getAiTurn() ? eval+5 : -(eval+5);
     }
 
+    // Evaluation for level 2
     private int evaluate2(BoardState state, int row, int col, char turn) {
-        char current = turn;
         String horizontal = getPattern(state, row, col, 0, 1, turn);
         String vertical = getPattern(state, row, col, 1, 0, turn);
         String diagonalLTR = getPattern(state, row, col, 1, 1, turn);
         String diagonalRTL = getPattern(state, row, col, 1, -1, turn);
         int eval = 0;
 
-        String row5 = current+""+current+""+current+""+current+""+current;
+        String row5 = turn+""+turn+""+turn+""+turn+""+turn;
         if(horizontal.contains(row5) || vertical.contains(row5) || diagonalLTR.contains(row5)
                 || diagonalRTL.contains(row5))  eval+= 100000000;
 
-        String row4Win = " " + current+""+current+""+current+""+current+ " ";
+        String row4Win = " "+turn+""+turn+""+turn+""+turn+" ";
         if(horizontal.contains(row4Win))    eval+= 1000000;
         if(vertical.contains(row4Win))      eval+= 1000000;
         if(diagonalLTR.contains(row4Win))   eval+= 1000000;
         if(diagonalRTL.contains(row4Win))   eval+= 1000000;
 
-        String normal4A = " " + current+""+current+""+current+""+current;
-        String normal4B = current+""+current+""+current+""+current + " ";
+        String normal4A = " "+turn+""+turn+""+turn+""+turn;
+        String normal4B = turn+""+turn+""+turn+""+turn+" ";
         if(horizontal.contains(normal4A))    eval+= 10000;
         if(vertical.contains(normal4A))      eval+= 10000;
         if(diagonalLTR.contains(normal4A))   eval+= 10000;
@@ -298,14 +294,14 @@ public class AI {
         if(diagonalLTR.contains(normal4B))   eval+= 10000;
         if(diagonalRTL.contains(normal4B))   eval+= 10000;
 
-        String row3 = " " + current+""+current+""+current+ " ";
+        String row3 = " "+turn+""+turn+""+turn+" ";
         if(horizontal.contains(row3))   eval+= 5000;
         if(vertical.contains(row3))     eval+= 5000;
         if(diagonalLTR.contains(row3))  eval+= 5000;
         if(diagonalRTL.contains(row3))  eval+= 5000;
 
-        String broken3T1 = " " + current+""+current+ " " + current + " ";
-        String broken3T2 = " " + current+ " "+current+""+current + " ";
+        String broken3T1 = " "+turn+""+turn+" "+turn+" ";
+        String broken3T2 = " "+turn+" "+turn+""+turn+" ";
         if(horizontal.contains(broken3T1))   eval+= 3000;
         if(vertical.contains(broken3T1))     eval+= 3000;
         if(diagonalLTR.contains(broken3T1))  eval+= 3000;
@@ -315,14 +311,14 @@ public class AI {
         if(diagonalLTR.contains(broken3T2))  eval+= 3000;
         if(diagonalRTL.contains(broken3T2))  eval+= 3000;
 
-        String row2 = " " + turn + turn + " ";
+        String row2 = " "+turn+turn+" ";
         if(horizontal.contains(row2))   eval+= 300;
         if(vertical.contains(row2))     eval+= 300;
         if(diagonalLTR.contains(row2))  eval+= 300;
         if(diagonalRTL.contains(row2))  eval+= 300;
 
-        String normal3A = " " + turn + turn + turn;
-        String normal3B = turn + turn + turn + " ";
+        String normal3A = " "+turn+turn+turn;
+        String normal3B = turn+turn+turn+" ";
         if(horizontal.contains(normal3A))   eval+= 100;
         if(vertical.contains(normal3A))     eval+= 100;
         if(diagonalLTR.contains(normal3A))  eval+= 100;
@@ -335,56 +331,28 @@ public class AI {
         return turn == state.getAiTurn() ? eval+5 : -(eval+5);
     }
 
-    private String getPattern(BoardState state, int row, int col, int dr, int dc, char turn) {
-        int r = row + dr;
-        int c = col + dc;
-        int k = 1;
-        char tempOpponent = turn == 'X' ? 'O' : 'X';
-        char[] chain = new char[2*state.wChain-1]; // the passed stone position is the center
-        for(int i = 0; i < chain.length; i++)chain[i]='A';
-        chain[chain.length/2]= turn;
-        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && k < state.wChain && state.board[r][c] != tempOpponent) {
-            chain[state.wChain-1+k] = state.board[r][c];
-            r += dr;
-            c += dc;
-            k++;
-        }
-
-        r = row - dr;
-        c = col - dc;
-        k = 1;
-        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && k < state.wChain && state.board[r][c] != tempOpponent) {
-            chain[state.wChain-1-k] = state.board[r][c];
-            r -= dr;
-            c -= dc;
-            k++;
-        }
-
-        return new String(chain);
-    }
-
+    // Evaluation for level 3. This may be edited in the future
     private int evaluate3(BoardState state, int row, int col, char turn) {
-        char current = turn;
         String horizontal = "A" + getPattern(state, row, col, 0, 1, turn) + "A";
         String vertical = "A" + getPattern(state, row, col, 1, 0, turn) + "A";
         String diagonalLTR = "A" + getPattern(state, row, col, 1, 1, turn) + "A";
         String diagonalRTL = "A" + getPattern(state, row, col, 1, -1, turn) + "A";
         int eval = 0;
 
-        String row5 = current+""+current+""+current+""+current+""+current;
+        String row5 = turn+""+turn+""+turn+""+turn+""+turn;
         if(horizontal.contains(row5) || vertical.contains(row5) || diagonalLTR.contains(row5)
                 || diagonalRTL.contains(row5))  eval+= 100000000;
 
 
-        String row4Win = " " + current+""+current+""+current+""+current+ " ";
+        String row4Win = " " +turn+""+turn+""+turn+""+turn+ " ";
         if(horizontal.contains(row4Win))    eval+= 1000000;
         if(vertical.contains(row4Win))      eval+= 1000000;
         if(diagonalLTR.contains(row4Win))   eval+= 1000000;
         if(diagonalRTL.contains(row4Win))   eval+= 1000000;
 
         boolean thread4 = false;
-        String normal4A = " " + current+""+current+""+current+""+current + "A";
-        String normal4B = "A" + current+""+current+""+current+""+current + " ";
+        String normal4A = " " +turn+""+turn+""+turn+""+turn+ "A";
+        String normal4B = "A" +turn+""+turn+""+turn+""+turn+ " ";
         if(horizontal.contains(normal4A))    {
             eval+= 10000;
             thread4 = true;
@@ -418,7 +386,7 @@ public class AI {
             thread4 = true;
         }
 
-        String row3 = " " + current+""+current+""+current+ " ";
+        String row3 = " " +turn+""+turn+""+turn+ " ";
         int thread3 = 0;
         if(horizontal.contains(row3))   {
             if(thread4) eval += 1000000;
@@ -445,8 +413,8 @@ public class AI {
             thread3++;
         }
 
-        String broken3T1 = " " + current+""+current+ " " + current + " ";
-        String broken3T2 = " " + current+ " " +current+""+current + " ";
+        String broken3T1 = " " +turn+""+turn+ " " +turn+ " ";
+        String broken3T2 = " " +turn+ " " +turn+""+turn+ " ";
         int threadBroken3 = 0;
         if(horizontal.contains(broken3T1))   {
             if(thread4) eval += 1000000;
@@ -680,5 +648,40 @@ public class AI {
         }
 
         return turn == state.getAiTurn() ? eval+5 : -(eval+5);
+    }
+
+    // This gives the pattern in the given spot
+    // (dr, dc) : (0, 1) -> horizontal, (0, 1) -> vertical,
+    // (1, 1) -> diagonal left to right, (1, -1) -> diagonal right to left
+    private String getPattern(BoardState state, int row, int col, int dr, int dc, char turn) {
+        // set the current stone as center
+        int r = row + dr;
+        int c = col + dc;
+        int k = 1;
+        char tempOpponent = turn == 'X' ? 'O' : 'X';
+        char[] chain = new char[2*state.wChain-1]; // the passed stone position is the center
+        for(int i = 0; i < chain.length; i++)chain[i]='A';
+        chain[chain.length/2]= turn;
+
+        // check the positive side
+        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && k < state.wChain && state.board[r][c] != tempOpponent) {
+            chain[state.wChain-1+k] = state.board[r][c];
+            r += dr;
+            c += dc;
+            k++;
+        }
+
+        // check the negative side
+        r = row - dr;
+        c = col - dc;
+        k = 1;
+        while(r >= 0 && r < state.boardSize && c >= 0 && c < state.boardSize && k < state.wChain && state.board[r][c] != tempOpponent) {
+            chain[state.wChain-1-k] = state.board[r][c];
+            r -= dr;
+            c -= dc;
+            k++;
+        }
+
+        return new String(chain);
     }
 }
