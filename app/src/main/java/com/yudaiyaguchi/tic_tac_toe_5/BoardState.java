@@ -22,24 +22,21 @@ public class BoardState {
     private int moveCounter = 0;
 
     public BoardState(int boardSize, int wChain, int aiLevel, int maxDepth) {
-//        turn = 'X';
         this.boardSize = boardSize;
         this.wChain = wChain;
         board = new char[boardSize][boardSize];
-//        chainsForFirst = new HashMap<String, Integer>();
-        // AI should be initialized here?
+        // Initialize AI and board
         ai = new AI(aiLevel, maxDepth);
         moves = new String[boardSize * boardSize];
-        inizializeBoard();
+        initializeBoard();
         maxRow = boardSize/2;
         minRow = boardSize/2;
         maxCol = boardSize/2;
         minCol = boardSize/2;
     }
 
-    /**
-     * Copy constructor
-     */
+    // Copy constructor is used to create virtual state. When AI is thinking the best move,
+    // AI creates virtual state so that it won't change the current state.
     public BoardState(BoardState other) {
         this.boardSize = other.boardSize;
         this.wChain = other.wChain;
@@ -53,7 +50,7 @@ public class BoardState {
         this.moves = other.moves;
     }
 
-    private void inizializeBoard() {
+    private void initializeBoard() {
         for(int i = 0; i < boardSize; i++) {
             for(int j = 0; j < boardSize; j++) {
                 board[i][j] = ' ';
@@ -73,14 +70,6 @@ public class BoardState {
 
     public void changeTurn() {
         currentPlayer = (currentPlayer == 'X' ? 'O' : 'X');
-    }
-
-    public void newGame() {
-        for(int i = 0; i < boardSize; i++) {
-            for(int j = 0; j < boardSize; j++) {
-                board[i][j] = ' ';
-            }
-        }
     }
 
     public char[][] getBoard() {
@@ -119,6 +108,7 @@ public class BoardState {
         return currentPlayer;
     }
 
+    // This method is called every single move that whether user/AI makes a move
     public boolean move(int row, int col) {
         board[row][col] = currentPlayer;
         maxRow = Math.max(maxRow, row);
@@ -152,6 +142,10 @@ public class BoardState {
         return afterMove;
     }
 
+    // check whether the game ended or not
+    // (dr, dc) : (0, 1) -> horizontal, (0, 1) -> vertical,
+    // (1, 1) -> diagonal left to right, (1, -1) -> diagonal right to left
+    // from center stone, check positive side and negative side
     public boolean isEnded(int row, int col, int dr, int dc) {
         int count  = 1; // center stone should be also counted
         int r = row + dr;
@@ -182,6 +176,7 @@ public class BoardState {
         return false;
     }
 
+    // This calls AI to find the best move
     public boolean aiMove() {
         ai.move(this);
         String stringMove = ai.getMove();
@@ -219,6 +214,8 @@ public class BoardState {
         return isMultiPlayer;
     }
 
+    // This class is called when the user click unmove button
+    // moves keep track of the history of moves
     public void unMove() {
         moveCounter--;
         String deletedMove1 = moves[moveCounter];
@@ -243,4 +240,3 @@ public class BoardState {
         return moveCounter;
     }
 }
-
