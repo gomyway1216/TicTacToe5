@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         final Button level3 = findViewById(R.id.level3);
-        level2.setOnClickListener(new View.OnClickListener() {
+        level3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent gameIntent =  new Intent(HomeActivity.this, GameActivity.class);
                 Bundle extras = new Bundle();
