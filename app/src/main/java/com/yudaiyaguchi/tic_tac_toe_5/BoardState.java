@@ -21,7 +21,6 @@ public class BoardState {
     private int minCol;
     private int counter = 0;
     private boolean isMultiPlayer = false;
-    private int aiLevel = 2;
     private String[] moves;
     private int moveCounter = 0;
 

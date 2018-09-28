@@ -26,6 +26,10 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //load game console
+        //check if ai is the first player
+        //check is two players or ai based
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         boardView = (BoardView) findViewById(R.id.board);
@@ -50,8 +54,7 @@ public class GameActivity extends AppCompatActivity {
             boardState.setUserTurn('X');
             boardState.setAiTurn('O');
             boardState.setCurrentPlayer('X');
-        }
-        else {
+        } else {
             boardState.setUserTurn('O');
             boardState.setAiTurn('X');
             boardState.setCurrentPlayer('X');

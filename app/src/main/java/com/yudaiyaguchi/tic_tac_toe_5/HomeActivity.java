@@ -91,5 +91,28 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(gameIntent);
             }
         });
+
+        final Button level3 = findViewById(R.id.level3);
+        level2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent gameIntent =  new Intent(HomeActivity.this, GameActivity.class);
+                Bundle extras = new Bundle();
+
+                int selectedSizeId = radioBoardSizeGroup.getCheckedRadioButtonId();
+                RadioButton radioBoardSizeButton = ((RadioButton) findViewById(selectedSizeId));
+                int size = Integer.parseInt(radioBoardSizeButton.getText().toString().trim().split(" ")[0]);
+                extras.putInt("boardSize", size);
+
+                int selectedTurnId = radioUserTurnGroup.getCheckedRadioButtonId();
+                RadioButton radioUserTurnButton = ((RadioButton) findViewById(selectedTurnId));
+                String temp = radioUserTurnButton.getText().toString();
+                extras.putChar("userTurn", temp.charAt(temp.length()-1));
+
+                extras.putInt("AILevel", 3);
+
+                gameIntent.putExtras(extras);
+                startActivity(gameIntent);
+            }
+        });
     }
 }

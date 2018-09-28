@@ -2,39 +2,33 @@ package com.yudaiyaguchi.tic_tac_toe_5;
 
 import android.util.Log;
 
-// minMax with alph-beta pruning
 public class AI {
-    private int maxDepth;
-    // this should be initialized when AI is created.
-    // or whenver it is calling this AI
-//    private char AITurn;
+    private final int maxDepth;
     private String move;
-    String TAG = "test";
-    private int maxRow;  // I define them to narrow down search space
-    private int maxCol;  // usually starting from center and it exclude
-    // more than 2 outside of most outside stone
-    int counter = 0; // for debugging
-    int aiLevel = 2;
+    private int counter = 0; // for debugging
+    private int aiLevel = 0;
 
     public AI(int aiLevel, int depth) {
         this.aiLevel = aiLevel;
-        this.aiLevel = 3;
         this.maxDepth = depth;
     }
 
     public void move(BoardState state) {
         counter++;
         move = search(state, maxDepth);
-//        move = search2(state, maxDepth);
+//        move = search2(state, maxDepth); // for future min-max algorithm
     }
 
     public String getMove() {
         return move;
     }
 
+    // find the best move
     public String search(BoardState state, int maxDepth) {
         String bestMove = null;
 
+        // check if AI goes first. If so, AI should put the stone in the center
+        // AI evaluate the move based on other stones, so at the first move, this is necessary
         if(state.getIsFirstMove()) {
             int center = state.getBoardSize()/2;
             if(state.isLegalMove(center,center)) {
@@ -43,28 +37,25 @@ public class AI {
             return bestMove;
         }
 
+        // boundary related to the most out side stone. This reduces the search space
         int rMax = state.getMaxRow() < state.boardSize-1 ? state.getMaxRow() + 1 : state.getMaxRow();
         int rMin = state.getMinRow() > 0 ? state.getMinRow() - 1 : state.getMinRow();
         int cMax = state.getMaxCol() < state.boardSize-1 ? state.getMaxCol() + 1 : state.getMaxCol();
         int cMin = state.getMinCol() > 0 ? state.getMinCol() - 1 : state.getMinCol();
 
+        // keep track of the best move
         int sumMoveValue = 0;
-        int sumMoveValue2 = 0;
         String finalMove = null;
-        String finalMove2 = null;
 
+        // check all the possible position within boundary
         Log.d("AI Level", "AI Level : " + aiLevel);
         boolean isBreak = false;
         for (int i = rMin; i <= rMax; i++) {
             if (isBreak) break;
             for (int j = cMin; j <= cMax; j++) {
                 if (state.isLegalMove(i, j)) {
-                    // ai move
-                    if(counter == 5 && i == 6 && j == 9) {
-                        Log.d("breakPoint", "breakPoint : ");
-                    }
-
                     int attackValueTemp = 0;
+                    // assume the stone is AI's one
                     if(aiLevel == 1)
                         attackValueTemp = evaluate1(state.applyMove(i, j), i, j, state.getAiTurn());
                     else if(aiLevel == 2)
@@ -72,9 +63,7 @@ public class AI {
                     else if(aiLevel == 3)
                         attackValueTemp = evaluate3(state.applyMove(i, j), i, j, state.getAiTurn());
 
-//                    int attackValueTemp = aiLevel == 2 ? evaluate2(state.applyMove(i, j), i, j,
-//                            state.getAiTurn()) : evaluate1(state.applyMove(i, j), i, j, state.getAiTurn());
-                    // opponent move
+                    // assume the stone is Human's one
                     int protectValueTemp = 0;
                     if(aiLevel == 1)
                         protectValueTemp = -evaluate1(state.applyMove(i, j), i, j, state.getUserTurn());
@@ -83,19 +72,15 @@ public class AI {
                     else if(aiLevel == 3)
                         protectValueTemp = -evaluate3(state.applyMove(i, j), i, j,state.getUserTurn());
 
+                    // measures whether attack or defend
+                    // attack should be valued more, because attack can make winning chain faster
                     int sumMoveValueTemp = 2 * attackValueTemp + protectValueTemp;
 
-//                    if(aiLevel == 3)
-//                        sumMoveValueTemp = 3 * attackValueTemp + 3 * protectValueTemp;
-
+                    // update the maximum move
                     if (sumMoveValue < sumMoveValueTemp) {
                         sumMoveValue = sumMoveValueTemp;
                         finalMove = i + "," + j;
                     }
-//                    if(sumMoveValue2 < sumMoveValueTemp && sumMoveValue > sumMoveValueTemp) {
-//                        sumMoveValue2 = sumMoveValueTemp;
-//                        finalMove2 = i + "," + j;
-//                    }
                 }
             }
         }
@@ -322,12 +307,12 @@ public class AI {
         String broken3T1 = " " + current+""+current+ " " + current + " ";
         String broken3T2 = " " + current+ " "+current+""+current + " ";
         if(horizontal.contains(broken3T1))   eval+= 3000;
-        if(vertical.contains(broken3T2))     eval+= 3000;
+        if(vertical.contains(broken3T1))     eval+= 3000;
         if(diagonalLTR.contains(broken3T1))  eval+= 3000;
-        if(diagonalRTL.contains(broken3T2))  eval+= 3000;
-        if(horizontal.contains(broken3T1))   eval+= 3000;
+        if(diagonalRTL.contains(broken3T1))  eval+= 3000;
+        if(horizontal.contains(broken3T2))   eval+= 3000;
         if(vertical.contains(broken3T2))     eval+= 3000;
-        if(diagonalLTR.contains(broken3T1))  eval+= 3000;
+        if(diagonalLTR.contains(broken3T2))  eval+= 3000;
         if(diagonalRTL.contains(broken3T2))  eval+= 3000;
 
         String row2 = " " + turn + turn + " ";
@@ -519,188 +504,178 @@ public class AI {
         else if(threadBroken3 > 1)
             eval+= 50000;
 
+//        String normal3A = " " + turn + turn + turn + "A";
+//        String normal3B = "A" + turn + turn + turn + " ";
+//        if(horizontal.contains(normal3A))   {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(vertical.contains(normal3A))     {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(diagonalLTR.contains(normal3A))  {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(diagonalRTL.contains(normal3A))  {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(horizontal.contains(normal3B))   {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(vertical.contains(normal3B))     {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(diagonalLTR.contains(normal3B))  {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
+//        if(diagonalRTL.contains(normal3B))  {
+////            if(thread4) eval += 10000;
+//            eval+= 500;
+//        }
 
+//        String broken3A = " " + turn + turn + " " + turn + 'A';
+//        String broken3B = "A" + turn + turn + " " + turn + " ";
+//        String broken3C = " " + turn + " "  + turn+ turn + 'A';
+//        String broken3D = "A"+ turn + " " + turn + turn + " ";
+//
+//        if(horizontal.contains(broken3A))   {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(vertical.contains(broken3A))     {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalLTR.contains(broken3A))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalRTL.contains(broken3A))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(horizontal.contains(broken3B))   {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(vertical.contains(broken3B))     {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalLTR.contains(broken3B))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalRTL.contains(broken3B))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//
+//        if(horizontal.contains(broken3C))   {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(vertical.contains(broken3C))     {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalLTR.contains(broken3C))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalRTL.contains(broken3C))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(horizontal.contains(broken3D))   {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(vertical.contains(broken3D))     {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalLTR.contains(broken3D))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
+//        if(diagonalRTL.contains(broken3D))  {
+////            if(thread4) eval += 10000;
+//            eval+= 400;
+//        }
 
-        String normal3A = " " + turn + turn + turn + "A";
-        String normal3B = "A" + turn + turn + turn + " ";
-        if(horizontal.contains(normal3A))   {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(vertical.contains(normal3A))     {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(diagonalLTR.contains(normal3A))  {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(diagonalRTL.contains(normal3A))  {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(horizontal.contains(normal3B))   {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(vertical.contains(normal3B))     {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(diagonalLTR.contains(normal3B))  {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-        if(diagonalRTL.contains(normal3B))  {
-//            if(thread4) eval += 10000;
-            eval+= 500;
-        }
-
-        String broken3A = " " + turn + turn + " " + turn + 'A';
-        String broken3B = "A" + turn + turn + " " + turn + " ";
-        String broken3C = " " + turn + " "  + turn+ turn + 'A';
-        String broken3D = "A"+ turn + " " + turn + turn + " ";
-
-        if(horizontal.contains(broken3A))   {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(vertical.contains(broken3A))     {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalLTR.contains(broken3A))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalRTL.contains(broken3A))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(horizontal.contains(broken3B))   {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(vertical.contains(broken3B))     {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalLTR.contains(broken3B))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalRTL.contains(broken3B))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-
-        if(horizontal.contains(broken3C))   {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(vertical.contains(broken3C))     {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalLTR.contains(broken3C))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalRTL.contains(broken3C))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(horizontal.contains(broken3D))   {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(vertical.contains(broken3D))     {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalLTR.contains(broken3D))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-        if(diagonalRTL.contains(broken3D))  {
-//            if(thread4) eval += 10000;
-            eval+= 400;
-        }
-
+        // imprement it to detect edge
         int i;
-        for(i = horizontal.length()/2; i < horizontal.length(); i++) {
+        for(i = horizontal.length()/2+1; i < horizontal.length(); i++) {
             if(horizontal.charAt(i) != ' ') break;
         }
-        if(horizontal.charAt(i) != 'A' && i+1 < horizontal.length() && horizontal.charAt(i+1) != 'A') {
+        if(horizontal.charAt(i) != 'A' && i+1 < horizontal.length() && horizontal.charAt(i+1) != 'A'
+                && row >= 0) {
             eval+=500;
         }
-        for(i = horizontal.length()/2; i >= 0; i--) {
+        for(i = horizontal.length()/2-1; i >= 0; i--) {
             if(horizontal.charAt(i) != ' ') break;
         }
         if(horizontal.charAt(i) != 'A' && i-1 >= 0 && horizontal.charAt(i-1) != 'A') {
             eval+=500;
         }
 
-        for(i = vertical.length()/2; i < vertical.length(); i++) {
+        for(i = vertical.length()/2+1; i < vertical.length(); i++) {
             if(vertical.charAt(i) != ' ') break;
         }
         if(vertical.charAt(i) != 'A' && i+1 < vertical.length() && vertical.charAt(i+1) != 'A') {
             eval+=500;
         }
-        for(i = vertical.length()/2; i >= 0; i--) {
+        for(i = vertical.length()/2-1; i >= 0; i--) {
             if(vertical.charAt(i) != ' ') break;
         }
         if(vertical.charAt(i) != 'A' && i-1 >= 0 && vertical.charAt(i-1) != 'A') {
             eval+=500;
         }
 
-        for(i = diagonalLTR.length()/2; i < diagonalLTR.length(); i++) {
+        for(i = diagonalLTR.length()/2+1; i < diagonalLTR.length(); i++) {
             if(diagonalLTR.charAt(i) != ' ') break;
         }
         if(diagonalLTR.charAt(i) != 'A' && i+1 < diagonalLTR.length() && diagonalLTR.charAt(i+1) != 'A') {
             eval+=500;
         }
-        for(i = diagonalLTR.length()/2; i >= 0; i--) {
+        for(i = diagonalLTR.length()/2-1; i >= 0; i--) {
             if(diagonalLTR.charAt(i) != ' ') break;
         }
         if(diagonalLTR.charAt(i) != 'A' && i-1 >= 0 && diagonalLTR.charAt(i-1) != 'A') {
             eval+=500;
         }
 
-        for(i = diagonalRTL.length()/2; i < diagonalRTL.length(); i++) {
+        for(i = diagonalRTL.length()/2+1; i < diagonalRTL.length(); i++) {
             if(diagonalRTL.charAt(i) != ' ') break;
         }
         if(diagonalRTL.charAt(i) != 'A' && i+1 < diagonalRTL.length() && diagonalRTL.charAt(i+1) != 'A') {
             eval+=500;
         }
-        for(i = diagonalRTL.length()/2; i >= 0; i--) {
+        for(i = diagonalRTL.length()/2-1; i >= 0; i--) {
             if(diagonalRTL.charAt(i) != ' ') break;
         }
         if(diagonalRTL.charAt(i) != 'A' && i-1 >= 0 && diagonalRTL.charAt(i-1) != 'A') {
             eval+=500;
         }
 
-
-
         String row2 = " " + turn + turn + " ";
         if(horizontal.contains(row2))   {
-//            if(thread4) eval += 100000;
-//            if(thread3) eval += 10000;
             eval+= 300;
         }
         if(vertical.contains(row2))     {
-//            if(thread4) eval += 100000;
-//            if(thread3) eval += 10000;
             eval+= 300;
         }
         if(diagonalLTR.contains(row2))  {
-//            if(thread4) eval += 100000;
-//            if(thread3) eval += 10000;
             eval+= 300;
         }
         if(diagonalRTL.contains(row2))  {
-//            if(thread4) eval += 100000;
-//            if(thread3) eval += 10000;
             eval+= 300;
         }
 
