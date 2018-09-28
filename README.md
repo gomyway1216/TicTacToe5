@@ -27,3 +27,7 @@ Achievement
 3. Learned a lot about how to make a good evaluation function after many trials.
 4. Learned how to debug (This project required a lot of debugging!)
 5. First game project to publish! (I like board games in general so in the future I may imprement more complex games.)
+
+![image](https://user-images.githubusercontent.com/32227575/46234018-8a438380-c33a-11e8-870a-bc56ccf6d02e.png)
+
+![image](https://user-images.githubusercontent.com/32227575/46234023-8e6fa100-c33a-11e8-9def-520c1cf8cc19.png)
