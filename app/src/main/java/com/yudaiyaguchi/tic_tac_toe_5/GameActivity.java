@@ -14,38 +14,28 @@ import android.widget.Button;
 import com.yudaiyaguchi.tic_tac_toe_5.R;
 
 public class GameActivity extends AppCompatActivity {
-
     private BoardView boardView;
     private BoardState boardState;
-    private int boardSize;
-    private int chain; // length to win ex 5 for gomoku
-    private int mode; // 1 human vs human,
-    // 2 h vs cpu, 3, cpu vs cpu
-    private int cpuMode;  // 1 for random, 2 for min-max
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //load game console
-        //check if ai is the first player
-        //check is two players or ai based
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         boardView = (BoardView) findViewById(R.id.board);
 
+        // get the setting values from homeActivity
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         int boardSize = extras.getInt("boardSize", 13);
         char userTurn = extras.getChar("userTurn");
         int aiLevel = extras.getInt("AILevel", 0);
 
-        // I will hard code the board size winning chanin and modify it later.
         boardState = new BoardState(boardSize, 5, aiLevel,3);
 
         boardView.setBoardState(boardState);
         boardView.setGameActivity(this);
 
+        // 1 : 2 players, 2 : 1 player and the user goes first, 3 : 1 player and the AI goes first
         if(userTurn == 'U') {
             boardState.setIsMultiPlayer();
             boardState.setUserTurn('X');
