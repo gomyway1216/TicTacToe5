@@ -29,8 +29,6 @@ public class BoardView extends View {
         super(context, attrs);
         gridPaint = new Paint();
 
-        boardSize = 13;
-
         // smooths out the edges of what is being drawn
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         oPaint.setColor(Color.RED);
@@ -47,6 +45,7 @@ public class BoardView extends View {
 
     public void setBoardState(BoardState boardState) {
         this.boardState = boardState;
+        boardSize = boardState.getBoardSize();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class BoardView extends View {
     }
 
     @Override
-    protected  void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas) {
         drawGrid(canvas);
         drawPieces(canvas);
     }
@@ -91,6 +90,11 @@ public class BoardView extends View {
                         activity.gameEnded(boardState.getUserTurn());
                     else {
                         if(boardState.isBoardFilled()) activity.gameEnded('D');
+
+                        if(boardState.getIsMultiPlayer()) {
+                            boardState.setUserTurn(boardState.getCurrentPlayer());
+                            return super.onTouchEvent(event);
+                        }
 
                         boolean aiWin = boardState.aiMove();
 //                        boolean aiWin = boardState.isEnded();

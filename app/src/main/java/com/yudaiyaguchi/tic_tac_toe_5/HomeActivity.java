@@ -38,6 +38,8 @@ public class HomeActivity extends AppCompatActivity {
                 int size = Integer.parseInt(radioBoardSizeButton.getText().toString().trim().split(" ")[0]);
                 extras.putInt("boardSize", size);
 
+                extras.putChar("userTurn", 'U');
+
                 gameIntent.putExtras(extras);
                 startActivity(gameIntent);
             }

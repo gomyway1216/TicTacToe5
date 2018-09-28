@@ -1,5 +1,7 @@
 package com.yudaiyaguchi.tic_tac_toe_5;
 
+import android.util.Log;
+
 import java.util.StringTokenizer;
 
 public class BoardState {
@@ -18,17 +20,20 @@ public class BoardState {
     private int maxCol;  // usually starting from center and it exclude
     private int minCol;
     private int counter = 0;
-    // more than 2 outside of most outside stone
+    private boolean isMultiPlayer = false;
+    private int aiLevel = 2;
+    private String[] moves;
+    private int moveCounter = 0;
 
-    public BoardState(int boardSize, int wChain, int maxDepth) {
+    public BoardState(int boardSize, int wChain, int aiLevel, int maxDepth) {
 //        turn = 'X';
         this.boardSize = boardSize;
         this.wChain = wChain;
         board = new char[boardSize][boardSize];
 //        chainsForFirst = new HashMap<String, Integer>();
         // AI should be initialized here?
-        ai = new AI();
-        ai.setMaxDepth(maxDepth);
+        ai = new AI(aiLevel, maxDepth);
+        moves = new String[boardSize * boardSize];
         inizializeBoard();
         maxRow = boardSize/2;
         minRow = boardSize/2;
@@ -49,6 +54,7 @@ public class BoardState {
                 this.board[i][j] = other.board[i][j];
             }
         }
+        this.moves = other.moves;
     }
 
     private void inizializeBoard() {
@@ -127,6 +133,8 @@ public class BoardState {
         if(isEnded(row, col, 0, 1)) return true;
         if(isEnded(row, col, 1, 1)) return true;
         if(isEnded(row, col, 1, -1)) return true;
+        moves[moveCounter] = row + "," + col;
+        moveCounter++;
         changeTurn();
         counter++;
         return false;
@@ -206,4 +214,37 @@ public class BoardState {
     public boolean isBoardFilled() {
         return counter == boardSize * boardSize;
     }
+
+    public void setIsMultiPlayer() {
+        isMultiPlayer = true;
+    }
+
+    public boolean getIsMultiPlayer() {
+        return isMultiPlayer;
+    }
+
+    public void unMove() {
+        moveCounter--;
+        String deletedMove1 = moves[moveCounter];
+        moves[moveCounter] = "";
+
+        moveCounter--;
+        String deletedMove2 = moves[moveCounter];
+        moves[moveCounter] = "";
+
+        String[] temp1 = deletedMove1.split(",");
+        int row1 = Integer.parseInt(temp1[0]);
+        int col1 = Integer.parseInt(temp1[1]);
+        String[] temp2 = deletedMove2.split(",");
+        int row2 = Integer.parseInt(temp2[0]);
+        int col2 = Integer.parseInt(temp2[1]);
+
+        board[row1][col1] = ' ';
+        board[row2][col2] = ' ';
+    }
+
+    public int getMoveCounter() {
+        return moveCounter;
+    }
 }
+

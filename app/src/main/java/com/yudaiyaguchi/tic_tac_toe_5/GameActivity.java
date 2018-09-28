@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.yudaiyaguchi.tic_tac_toe_5.R;
 
@@ -21,6 +23,7 @@ public class GameActivity extends AppCompatActivity {
     // 2 h vs cpu, 3, cpu vs cpu
     private int cpuMode;  // 1 for random, 2 for min-max
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,20 +31,22 @@ public class GameActivity extends AppCompatActivity {
         boardView = (BoardView) findViewById(R.id.board);
 
         Intent intent = getIntent();
-        // user chose to go first
-        char userTurn = intent.getCharExtra("turn", 'X');
-        int depth = intent.getIntExtra("depth", 1);
-        Log.d("turn: "," passed turn: " + userTurn);
-        Log.d("depth: "," passed depth: " + depth);
+        Bundle extras = intent.getExtras();
+        int boardSize = extras.getInt("boardSize", 13);
+        char userTurn = extras.getChar("userTurn");
+        int aiLevel = extras.getInt("AILevel", 0);
 
         // I will hard code the board size winning chanin and modify it later.
-        boardState = new BoardState(13, 5, 3
-        );
+        boardState = new BoardState(boardSize, 5, aiLevel,3);
 
         boardView.setBoardState(boardState);
         boardView.setGameActivity(this);
 
-        if(userTurn == 'X') {
+        if(userTurn == 'U') {
+            boardState.setIsMultiPlayer();
+            boardState.setUserTurn('X');
+            boardState.setCurrentPlayer('X');
+        } else if(userTurn == 'X') {
             boardState.setUserTurn('X');
             boardState.setAiTurn('O');
             boardState.setCurrentPlayer('X');
@@ -56,6 +61,18 @@ public class GameActivity extends AppCompatActivity {
             boardView.invalidate();
         }
 
+        final Button button = (Button) findViewById(R.id.undo);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(boardState.getMoveCounter() <= 2) {
+                    newGame();
+                    return;
+                }
+
+                boardState.unMove();
+                boardView.invalidate();
+            }
+        });
     }
 
     @Override
