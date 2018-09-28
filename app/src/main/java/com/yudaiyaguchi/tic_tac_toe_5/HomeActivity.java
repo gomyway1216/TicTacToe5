@@ -21,15 +21,18 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
+        // radio button
         radioBoardSizeGroup = (RadioGroup) findViewById(R.id.boardSize);
-
         radioUserTurnGroup = (RadioGroup) findViewById(R.id.userTurn);
+
+        // For each button click
+        // 1) create intent
+        // 2) add detailed information to the intent
+        // 3) start the intent
 
         final Button player2 = findViewById(R.id.player2);
         player2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
                 Intent gameIntent =  new Intent(HomeActivity.this, GameActivity.class);
                 Bundle extras = new Bundle();
 

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -29,12 +28,11 @@ public class BoardView extends View {
         super(context, attrs);
         gridPaint = new Paint();
 
-        // smooths out the edges of what is being drawn
+        // 'O' shape and 'X' shape
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         oPaint.setColor(Color.RED);
         oPaint.setStyle(Paint.Style.STROKE);
         oPaint.setStrokeWidth(ELT_STROKE_WIDTH);
-        // use the same setting as oPaint
         xPaint = new Paint(oPaint);
         xPaint.setColor(Color.BLUE);
     }
@@ -43,11 +41,13 @@ public class BoardView extends View {
         this.activity = gameContainer;
     }
 
+    // This is called to set the view to Game activity
     public void setBoardState(BoardState boardState) {
         this.boardState = boardState;
         boardSize = boardState.getBoardSize();
     }
 
+    // measure the screen and the value is used my
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -65,24 +65,24 @@ public class BoardView extends View {
                 MeasureSpec.makeMeasureSpec(squareLength, MeasureSpec.EXACTLY));
     }
 
+    // This method is called each time invalidate() is called
     @Override
     protected void onDraw(Canvas canvas) {
         drawGrid(canvas);
         drawPieces(canvas);
     }
 
+    // Detect user interaction with screen (detect user putting stones)
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             int x = (int) (event.getX() / boxLength);
             int y = (int) (event.getY() / boxLength);
 
+            // if it is user's turn
             if(boardState.getUserTurn() == boardState.getCurrentPlayer()) {
                 if(boardState.isLegalMove(y, x)) {
-                    // call board.move method
-//                    invalidate();
                     boolean userWin = boardState.move(y, x);
-//                    boolean userWin = boardState.isEnded();
                     invalidate();
 
                     // if user win
@@ -91,13 +91,14 @@ public class BoardView extends View {
                     else {
                         if(boardState.isBoardFilled()) activity.gameEnded('D');
 
+                        // if there are 2 players, no need to implement AI
                         if(boardState.getIsMultiPlayer()) {
                             boardState.setUserTurn(boardState.getCurrentPlayer());
                             return super.onTouchEvent(event);
                         }
 
+                        // move on to ai move after user made a move
                         boolean aiWin = boardState.aiMove();
-//                        boolean aiWin = boardState.isEnded();
                         invalidate();
 
                         if(aiWin)
@@ -108,10 +109,10 @@ public class BoardView extends View {
                 }
             }
         }
-
         return super.onTouchEvent(event);
     }
 
+    // draw the grid runs from top to down and left to right
     private void drawGrid(Canvas canvas) {
         // x coordinates start from left and
         // y coordinates start from top
@@ -139,21 +140,16 @@ public class BoardView extends View {
         }
     }
 
-    // after char win = gameEngine.play(x, y); is called in onTouchEvent,
-    // boardState inside of gameEngine would be changed.
-    // by accessing the board by gameEngine.getBoardstates(i, j),
-    // we can know current board and draw it.
+    // draw each pieces by accessing char list in boardState
     private void drawPieces(Canvas canvas) {
         for(int i = 0; i < boardSize; i++) {
             for(int j = 0; j < boardSize; j++) {
-                // I am guessing this is going to draw after computer moves
-                // But I am still not sure
-                // gameEngine.getBoardstates(i, j) is the char
                 drawEachBox(canvas, boardState.getCharOfBox(i,j), i, j);
             }
         }
     }
 
+    // draw 'O' and 'X' at the given position on canvas
     private void drawEachBox(Canvas canvas, char c, int y, int x) {
         if(c == 'O') {
             // move by the length of box and by boxLength / 2, it is drawing it to the center of box
@@ -161,10 +157,8 @@ public class BoardView extends View {
             float cy = (boxLength * y) + boxLength / 2;
             canvas.drawCircle(cx, cy, boxLength / 2 - ELT_MARGIN, oPaint);
         } else if(c == 'X') {
-
             // drawing should not be starting from the edge of the line,
             // that's why it is adding ELT_MARGIN I think
-
             // this is from left to right of 'X'
             float startX = (boxLength * x) + ELT_MARGIN;
             float startY = (boxLength * y) + ELT_MARGIN;

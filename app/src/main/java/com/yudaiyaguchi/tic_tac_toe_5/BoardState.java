@@ -1,14 +1,11 @@
 package com.yudaiyaguchi.tic_tac_toe_5;
 
-import android.util.Log;
-
 import java.util.StringTokenizer;
 
 public class BoardState {
     int boardSize;
     int wChain;
     char[][] board;
-//    public char aiTurn;
     private char userTurn;
     private char aiTurn;
     private char currentPlayer;
