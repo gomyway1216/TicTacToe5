@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,6 +17,7 @@ import com.yudaiyaguchi.tic_tac_toe_5.R;
 public class GameActivity extends AppCompatActivity {
     private BoardView boardView;
     private BoardState boardState;
+    private Button unmoveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         int boardSize = extras.getInt("boardSize", 13);
+//        int boardSize = 3;   // for debugging // small board is easier to debug
         char userTurn = extras.getChar("userTurn");
         int aiLevel = extras.getInt("AILevel", 0);
 
@@ -54,10 +57,10 @@ public class GameActivity extends AppCompatActivity {
             boardView.invalidate();
         }
 
-        final Button button = (Button) findViewById(R.id.undo);
-        button.setOnClickListener(new View.OnClickListener() {
+        unmoveButton = (Button) findViewById(R.id.undo);
+        unmoveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(boardState.getMoveCounter() <= 2) {
+                if(!boardState.getIsMultiPlayer() && boardState.getMoveCounter() <= 2) {
                     newGame();
                     return;
                 }
@@ -89,16 +92,16 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void gameEnded(char c) {
-        String msg = (c == 'D') ? "Game Ended. Tie" : "GameEnded. " + c + " win";
+        String msg = (c == 'D') ? "Good Game!    Tie" : "Good Game! " + c + " won";
 
-        new AlertDialog.Builder(this).setTitle("Tic Tac Toe").
-                setMessage(msg).
-                setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        newGame();
-                    }
-                }).show();
+        new AlertDialog.Builder(this).setTitle(msg).setMessage("Please click New Game").show();
+        unmoveButton.setEnabled(false);
+        boardView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
     }
 
     private void newGame() {

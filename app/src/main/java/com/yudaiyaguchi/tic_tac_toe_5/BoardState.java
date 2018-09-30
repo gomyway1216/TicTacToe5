@@ -1,5 +1,7 @@
 package com.yudaiyaguchi.tic_tac_toe_5;
 
+import android.util.Log;
+
 import java.util.StringTokenizer;
 
 public class BoardState {
@@ -203,7 +205,14 @@ public class BoardState {
     }
 
     public boolean isBoardFilled() {
-        return counter == boardSize * boardSize;
+        for(int i = 0; i < boardSize; i++) {
+            for(int j = 0; j < boardSize; j++) {
+                if(board[i][j] == ' ')  return false;
+            }
+        }
+        return true;
+        // has a problem when user push undo
+//        return counter == boardSize * boardSize;
     }
 
     public void setIsMultiPlayer() {
@@ -217,6 +226,19 @@ public class BoardState {
     // This class is called when the user click unmove button
     // moves keep track of the history of moves
     public void unMove() {
+        if(isMultiPlayer) {
+            moveCounter--;
+            String deletedMove = moves[moveCounter];
+            moves[moveCounter] = "";
+
+            String[] temp1 = deletedMove.split(",");
+            int row = Integer.parseInt(temp1[0]);
+            int col = Integer.parseInt(temp1[1]);
+            board[row][col] = ' ';
+            changeTurn();
+            return;
+        }
+
         moveCounter--;
         String deletedMove1 = moves[moveCounter];
         moves[moveCounter] = "";

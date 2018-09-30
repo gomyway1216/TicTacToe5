@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -79,24 +80,36 @@ public class BoardView extends View {
             int x = (int) (event.getX() / boxLength);
             int y = (int) (event.getY() / boxLength);
 
-            // if it is user's turn
-            if(boardState.getUserTurn() == boardState.getCurrentPlayer()) {
+            if(boardState.getMoveCounter() == 4)
+                Log.d("print", "print");
+
+            // if there are 2 players, no need to implement AI
+            if(boardState.getIsMultiPlayer()) {
                 if(boardState.isLegalMove(y, x)) {
                     boolean userWin = boardState.move(y, x);
                     invalidate();
+                    if(userWin)
+                        activity.gameEnded(boardState.getCurrentPlayer());
 
+                    if(boardState.isBoardFilled()) {
+                        activity.gameEnded('D');
+                    }
+                }
+                return super.onTouchEvent(event);
+            }
+
+            // if it is user's turn
+            if(!boardState.getIsMultiPlayer()&& boardState.getUserTurn() == boardState.getCurrentPlayer()) {
+                if(boardState.isLegalMove(y, x)) {
+                    boolean userWin = boardState.move(y, x);
+                    invalidate();
+//                    if(boardState.isBoardFilled()) activity.gameEnded('D');
                     // if user win
                     if(userWin)
                         activity.gameEnded(boardState.getUserTurn());
-                    else {
-                        if(boardState.isBoardFilled()) activity.gameEnded('D');
-
-                        // if there are 2 players, no need to implement AI
-                        if(boardState.getIsMultiPlayer()) {
-                            boardState.setUserTurn(boardState.getCurrentPlayer());
-                            return super.onTouchEvent(event);
-                        }
-
+                    else if(boardState.isBoardFilled()) {
+                        activity.gameEnded('D');
+                    } else {
                         // move on to ai move after user made a move
                         boolean aiWin = boardState.aiMove();
                         invalidate();
@@ -105,9 +118,11 @@ public class BoardView extends View {
                             activity.gameEnded((boardState.getAiTurn()));
                     }
 
-                    if(boardState.isBoardFilled()) activity.gameEnded('D');
+                    if(boardState.isBoardFilled())
+                        activity.gameEnded('D');
                 }
             }
+//            if(boardState.isBoardFilled()) activity.gameEnded('D');
         }
         return super.onTouchEvent(event);
     }
