@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity"></activity>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1376392773501409/1123341491"/>
     </application>
 
 </manifest>

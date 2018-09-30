@@ -1,6 +1,7 @@
 package com.yudaiyaguchi.tic_tac_toe_5;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,17 +10,28 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdRequest;
+
 import com.yudaiyaguchi.tic_tac_toe_5.R;
 
 public class HomeActivity extends AppCompatActivity {
     private int boardSize = 13;
     private RadioGroup radioBoardSizeGroup;
     private RadioGroup radioUserTurnGroup;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // Make to run your application only in portrait mode
+        MobileAds.initialize(this, "ca-app-pub-1376392773501409/1123341491");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // radio button
         radioBoardSizeGroup = (RadioGroup) findViewById(R.id.boardSize);
