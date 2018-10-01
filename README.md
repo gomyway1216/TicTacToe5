@@ -3,6 +3,8 @@ Gomoku - Five in a row - TicTacToe 5 version
 ==============================
 
 This repository contains the personal project to explore game playing mechanizm by using Android
+I published this app on Google Play store. It is free!
+https://play.google.com/store/apps/details?id=com.yudaiyaguchi.tic_tac_toe_5
 
 Function
 ------------
