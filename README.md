@@ -2,17 +2,14 @@
 Gomoku - Five in a row - TicTacToe 5 version
 ==============================
 
-This repository contains the personal project to explore game playing mechanizm by using Android. <br />
-I published this app on Google Play store. It is free!
+This repository contains a personal project to explore game playing mechanism by using Android.  <br />
+I published this app on the Google Play store. It is free!
 https://play.google.com/store/apps/details?id=com.yudaiyaguchi.tic_tac_toe_5
 
 Function
 ------------
 
-Created the simple UI that user can choose the size of the board, number of players, AI level and who goes first.
-AI uses my own evaluation function. I commented out Min-Max for future reference to make the AI even stronger.
-AI results in choosing good moves quickly and beated everyone arond me with their all of their trials.
-While user is playing, user can easily unmove the move that they made or start new game/go back to home screen.
+I have created the simple UI that user can choose the size of the board, number of players, AI level and who goes first. AI uses my own evaluation function. I commented out Min-Max for future reference to make the AI even stronger. AI results in choosing good moves quickly and beat everyone around me.
 
 Purpose and fixes
 --------------
